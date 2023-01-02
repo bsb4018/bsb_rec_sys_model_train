@@ -1,0 +1,12 @@
+artifact
+saved_models
+venv
+docs
+flowcharts
+notebooks
+.git
+.terraform/
+.terraform.lock.hcl
+rec_sys_fs/
+data/
+logs/
