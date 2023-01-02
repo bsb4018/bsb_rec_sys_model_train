@@ -24,13 +24,10 @@ class DataIngestion:
             logging.info("Getting Course Features from Feast")
             courses_data = self.store.get_historical_features(entity_df = courses_df1, features = \
                 ["courses_df_feature_view:course_id",\
-                    "courses_df_feature_view:course_name", "courses_df_feature_view:web_dev",\
-                        "courses_df_feature_view:data_sc", "courses_df_feature_view:data_an",\
-                            "courses_df_feature_view:game_dev", "courses_df_feature_view:mob_dev",\
-                                "courses_df_feature_view:program","courses_df_feature_view:cloud" ]).to_df()
+                    "courses_df_feature_view:course_name", "courses_df_feature_view:course_tags"]).to_df()
         
             logging.info("Forming the response")
-            response_data = courses_data[["course_id", "course_name", "web_dev", "data_sc", "data_an", "game_dev", "program", "cloud"]]
+            response_data = courses_data[["course_id", "course_name", "course_tags"]]
 
             return response_data
 

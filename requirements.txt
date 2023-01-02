@@ -1,6 +1,6 @@
 pandas
 scipy
-sklearn
+scikit-learn
 boto3==1.24.65
 fastapi==0.82.0
 pyyaml==6.0
