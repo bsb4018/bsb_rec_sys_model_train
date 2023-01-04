@@ -1,8 +1,9 @@
 import sys
 import os
 from src.components.data_ingestion import DataIngestion
-from src.entity.config_entity import TrainingPipelineConfig,DataIngestionConfig
-from src.entity.artifact_entity import DataIngestionArtifact
+from src.components.model_training import ModelTrainer
+from src.entity.config_entity import TrainingPipelineConfig,DataIngestionConfig,ModelTrainerConfig
+from src.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact
 from src.exception import TrainException
 from src.logger import logging
 
@@ -31,7 +32,24 @@ class TrainPipeline:
     
         except Exception as e:
             raise TrainException(e, sys)
-   
+
+    def start_model_trainer(self,data_ingestion_artifact:DataIngestionArtifact):
+        try:
+            logging.info("Entered the start_model_trainer method of TrainPipeline class")
+            model_trainer_config = ModelTrainerConfig(training_pipeline_config=self.training_pipeline_config)
+            model_trainer = ModelTrainer(model_trainer_config, data_ingestion_artifact)
+            model_trainer_artifact = model_trainer.initiate_model_trainer()
+
+
+            logging.info("Performed the Model Training operation")
+            logging.info(
+                "Exited the start_model_trainer method of TrainPipeline class"
+            )
+
+            return model_trainer_artifact
+
+        except  Exception as e:
+            raise  TrainException(e,sys) from e
 
     def run_pipeline(self,) -> None:
         try:
@@ -39,6 +57,7 @@ class TrainPipeline:
             TrainPipeline.is_pipeline_running=True
 
             data_ingestion_artifact:DataIngestionArtifact = self.start_data_ingestion()
+            model_trainer_artifact = self.start_model_trainer(data_ingestion_artifact)
 
             TrainPipeline.is_pipeline_running=False
             
