@@ -29,3 +29,12 @@ MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_COURSES_MODEL_NAME: str = "model_courses.pkl"
 MODEL_TRAINER_TRAINED_INTERACTIONS_MODEL_NAME: str = "model_interactions.pkl"
+
+
+'''
+MODEL EVALUATION ralated constant start with MODEL_EVALUATION VAR NAME
+'''
+
+MODEL_EVALUATION_DIR_NAME: str = "model_evaluation"
+MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.005
+MODEL_EVALUATION_REPORT_NAME= "report.yaml"

@@ -19,6 +19,5 @@ tox
 flake8
 feast==0.21.3
 implicit
-neptune-client
-"bentoml[all]"
+rankfm
 -e.

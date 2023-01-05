@@ -30,6 +30,7 @@ class ModelTrainer:
             interactions_data_csr = csr_matrix((interactionsdf.rating, (interactionsdf.user_id , interactionsdf.course_id)))
             model = AlternatingLeastSquares(factors=64, regularization=0.05, alpha=2.0)
             model.fit(interactions_data_csr)
+            
             return model
         except Exception as e:
             raise TrainException(e,sys)
@@ -49,7 +50,7 @@ class ModelTrainer:
 
         except Exception as e:
             raise TrainException(e,sys)
-
+    
     def initiate_model_trainer(self) -> ModelTrainerArtifact:
         try:
             train_interactions_file_path = self.data_ingestion_artifact.trained_interactions_file_path
