@@ -8,7 +8,6 @@ class ModelEvaluation:
     def __init__(self):
         try:
             self.model_recommendation = Recommendation()
-            self.data_split = DataSplit()
         except Exception as e:
             raise TrainException(e,sys)
 

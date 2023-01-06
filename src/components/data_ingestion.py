@@ -88,8 +88,9 @@ class DataIngestion:
             #train_mask = interactions['random'] <  (1 - valid_data_percentage)
             #valid_mask = interactions['random'] >= (1 - valid_data_percentage)
 
-            #interactions_train = interactions[train_mask].groupby(['user_id', 'course_id']).size().to_frame('rating').reset_index()
-            #interactions_valid = interactions[valid_mask].groupby(['user_id', 'course_id']).size().to_frame('rating').reset_index()
+            #Ordering the data
+            interactions_train = interactions_train.groupby(['user_id', 'course_id']).size().to_frame('rating').reset_index()
+            interactions_valid = interactions_valid.groupby(['user_id', 'course_id']).size().to_frame('rating').reset_index()
 
             sample_weight_train = np.log2(interactions_train['rating'] + 1)
             sample_weight_valid = np.log2(interactions_valid['rating'] + 1)

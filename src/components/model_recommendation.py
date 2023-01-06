@@ -1,9 +1,10 @@
+'''
 from src.logger import logging
 from src.exception import TrainException
 import os,sys
 import pandas as pd
+from src.components.data_ingestion import DataIngestionArtifact
 
-'''
 class Recommendation:
     def __init__(self):
         try:
@@ -11,10 +12,9 @@ class Recommendation:
         except Exception as e:
             raise TrainException(e,sys)
 
-    def get_recommendations_similar_courses(self, course_name: str):
+    def get_recommendations_similar_courses(self, coursesdf, model, course_name: str):
         try:
-            coursesdf = self.load_courses_ingested_features()
-            cosine_sim = self.model_training_similar_courses()
+            cosine_sim = model
 
             #Construct a reverse mapping of indices and course names, and drop duplicate titles, if any
             indices = pd.Series(coursesdf.index,index=coursesdf['course_name']).drop_duplicates()
@@ -46,9 +46,18 @@ class Recommendation:
         except Exception as e:
             raise TrainException(e,sys)
 
-    def get_recommendations_similar_users(self, course_name: str):
+    def get_recommendations_similar_users_one(self,interactions_csr, model, user_id: int):
         try:
-            pass
+            ids, scores = model.recommend(user_id, interactions_csr[user_id], N=5, filter_already_liked_items=False)
+            return ids, scores
+
+        except Exception as e:
+            raise TrainException(e,sys)
+
+    def get_recommendations_similar_users_all(self,interactions_csr, model):
+        try:
+            recs_imp = model.recommend_all(user_items=interactions_csr, N=10, filter_already_liked_items=False)
+            return recs_imp
 
         except Exception as e:
             raise TrainException(e,sys)
