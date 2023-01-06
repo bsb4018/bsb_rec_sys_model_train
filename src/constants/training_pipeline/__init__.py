@@ -3,7 +3,8 @@ import os
 SAVED_MODEL_DIR =os.path.join("saved_models")
 PIPELINE_NAME: str = "course_recommend"
 ARTIFACT_DIR: str = "artifact"
-
+BEST_MODEL_FILE_NAME = "best_model.pkl"
+BEST_MODEL_REPORT_FILE_NAME = "best_model_report.json"
 '''
 Defining basic and common file names
 '''
@@ -36,5 +37,11 @@ MODEL EVALUATION ralated constant start with MODEL_EVALUATION VAR NAME
 '''
 
 MODEL_EVALUATION_DIR_NAME: str = "model_evaluation"
-MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.005
-MODEL_EVALUATION_REPORT_NAME= "report.yaml"
+MODEL_EVALUATION_CHANGED_HITRATE_THRESHOLD: float = 1
+MODEL_EVALUATION_REPORT_NAME= "report.json"
+
+'''
+Model Pusher ralated constant start with MODEL_PUSHER VAR NAME
+'''
+MODEL_PUSHER_DIR_NAME = "model_pusher"
+MODEL_PUSHER_SAVED_MODEL_DIR = SAVED_MODEL_DIR

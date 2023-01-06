@@ -78,20 +78,22 @@ class DataIngestion:
         try:
             logging.info("Entered split_ingested_interaction_features_data method of Data_Ingestion class")
             interactions = pd.read_parquet(self.data_ingestion_config.all_interactions_file_path)
+
             test_size = self.data_ingestion_config.interactions_split_percentage
-
-            interactions_train, interactions_valid = train_test_split(interactions, test_size=test_size, random_state=32,\
-                 stratify=interactions[["user_id"]])
-
-            #valid_data_percentage = self.data_ingestion_config.interactions_split_percentage
-            #interactions['random'] = np.random.random(size=len(interactions))
-            #train_mask = interactions['random'] <  (1 - valid_data_percentage)
-            #valid_mask = interactions['random'] >= (1 - valid_data_percentage)
-
-            #Ordering the data
+            interactions_train, interactions_valid = train_test_split(interactions, test_size=test_size, random_state=48)
             interactions_train = interactions_train.groupby(['user_id', 'course_id']).size().to_frame('rating').reset_index()
             interactions_valid = interactions_valid.groupby(['user_id', 'course_id']).size().to_frame('rating').reset_index()
+            
+            '''
+            valid_data_percentage = self.data_ingestion_config.interactions_split_percentage
+            interactions['random'] = np.random.random(size=len(interactions))
+            train_mask = interactions['random'] <  (1 - valid_data_percentage)
+            valid_mask = interactions['random'] >= (1 - valid_data_percentage)
 
+            #Ordering the data
+            interactions_train = interactions[train_mask].groupby(['user_id', 'course_id']).size().to_frame('rating').reset_index()
+            interactions_valid = interactions[valid_mask].groupby(['user_id', 'course_id']).size().to_frame('rating').reset_index()
+            '''
             sample_weight_train = np.log2(interactions_train['rating'] + 1)
             sample_weight_valid = np.log2(interactions_valid['rating'] + 1)
         

@@ -1,4 +1,3 @@
-'''
 from src.logger import logging
 from src.exception import TrainException
 import os,sys
@@ -61,4 +60,3 @@ class Recommendation:
 
         except Exception as e:
             raise TrainException(e,sys)
-'''

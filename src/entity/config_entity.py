@@ -52,4 +52,21 @@ class ModelEvaluationConfig:
             training_pipeline_config.artifact_dir, training_pipeline.MODEL_EVALUATION_DIR_NAME
         )
         self.report_file_path = os.path.join(self.model_evaluation_dir,training_pipeline.MODEL_EVALUATION_REPORT_NAME)
-        self.change_threshold = training_pipeline.MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE
+        self.change_threshold = training_pipeline.MODEL_EVALUATION_CHANGED_HITRATE_THRESHOLD
+
+
+class ModelPusherConfig:
+    def __init__(self,training_pipeline_config:TrainingPipelineConfig):
+        self.model_evaluation_dir: str = os.path.join(
+            training_pipeline_config.artifact_dir, training_pipeline.MODEL_PUSHER_DIR_NAME
+        )
+        self.model_file_path = os.path.join(self.model_evaluation_dir,training_pipeline.BEST_MODEL_FILE_NAME)
+        timestamp = round(datetime.now().timestamp())
+        self.saved_model_path=os.path.join(
+            training_pipeline.SAVED_MODEL_DIR,
+            f"{timestamp}",
+            training_pipeline.BEST_MODEL_FILE_NAME)
+        self.saved_model_report_path=os.path.join(
+            training_pipeline.SAVED_MODEL_DIR,
+            f"{timestamp}",
+            training_pipeline.BEST_MODEL_REPORT_FILE_NAME)

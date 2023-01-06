@@ -2,8 +2,10 @@ import sys
 import os
 from src.components.data_ingestion import DataIngestion
 from src.components.model_training import ModelTrainer
-from src.entity.config_entity import TrainingPipelineConfig,DataIngestionConfig,ModelTrainerConfig
-from src.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact
+from src.components.model_evaluation import ModelEvaluation
+from src.components.model_pusher import ModelPusher
+from src.entity.config_entity import TrainingPipelineConfig,DataIngestionConfig,ModelTrainerConfig,ModelEvaluationConfig,ModelPusherConfig
+from src.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact,ModelEvaluationArtifact,ModelPusherArtifact
 from src.exception import TrainException
 from src.logger import logging
 
@@ -49,7 +51,41 @@ class TrainPipeline:
             return model_trainer_artifact
 
         except  Exception as e:
-            raise  TrainException(e,sys) from e
+            raise  TrainException(e,sys)
+
+    def start_model_evaluation(self,data_ingestion_artifact:DataIngestionArtifact,
+                                 model_trainer_artifact:ModelTrainerArtifact
+                                ):
+        try:
+            logging.info("Entered the start_model_evaluation method of TrainPipeline class")
+            model_eval_config = ModelEvaluationConfig(self.training_pipeline_config)
+            model_eval = ModelEvaluation(model_eval_config, data_ingestion_artifact, model_trainer_artifact)
+            model_eval_artifact = model_eval.model_evaluating_similar_users()
+
+            logging.info("Performed the Model Evaluation operation")
+            logging.info(
+                "Exited the start_model_evaluation method of TrainPipeline class"
+            )
+            return model_eval_artifact
+        except  Exception as e:
+            raise  TrainException(e,sys)
+
+    def start_model_pusher(self,model_eval_artifact:ModelEvaluationArtifact):
+        try:
+            logging.info("Entered the start_model_pusher method of TrainPipeline class")
+            model_pusher_config = ModelPusherConfig(training_pipeline_config=self.training_pipeline_config)
+            model_pusher = ModelPusher(model_pusher_config, model_eval_artifact)
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+
+            logging.info("Performed the Model Pusher operation")
+            logging.info(
+                "Exited the start_model_pusher method of TrainPipeline class"
+            )
+
+            return model_pusher_artifact
+        except  Exception as e:
+            raise TrainException(e,sys)
+    
 
     def run_pipeline(self,) -> None:
         try:
@@ -58,6 +94,11 @@ class TrainPipeline:
 
             data_ingestion_artifact:DataIngestionArtifact = self.start_data_ingestion()
             model_trainer_artifact = self.start_model_trainer(data_ingestion_artifact)
+            model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact, model_trainer_artifact)
+            if not model_evaluation_artifact.is_model_accepted:
+                print("Process Completed Succesfully. Model Trained and Evaluated but the Trained model is not better than the best model. So, we do not push this model to Production. Exiting.")
+                raise Exception("Process Completed Succesfully. Model Trained and Evaluated but the Trained model is not better than the best model. So, we do not push this model to Production. Exiting.")
+            model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact)
 
             TrainPipeline.is_pipeline_running=False
             

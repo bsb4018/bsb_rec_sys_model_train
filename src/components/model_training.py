@@ -28,7 +28,7 @@ class ModelTrainer:
             #read interactions data
             interactionsdf = pd.read_parquet(train_interactions_file_path)
             interactions_data_csr = csr_matrix((interactionsdf.rating, (interactionsdf.user_id , interactionsdf.course_id)))
-            model = AlternatingLeastSquares(factors=64, regularization=0.05, alpha=2.0)
+            model = AlternatingLeastSquares(factors=64, regularization=0.05, alpha=2.0, iterations=15)
             model.fit(interactions_data_csr)
             
             return model
@@ -76,7 +76,7 @@ class ModelTrainer:
             #Model Trainer artifact
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_courses_model_file_path=self.model_trainer_config.trained_courses_model_file_path,
-                trained_ineractions_model_file_path=self.model_trainer_config.trained_interactions_model_file_path)
+                trained_interactions_model_file_path=self.model_trainer_config.trained_interactions_model_file_path)
             
             logging.info(f"Model trainer artifact: {model_trainer_artifact}")
             return model_trainer_artifact
