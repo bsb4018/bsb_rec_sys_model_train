@@ -17,6 +17,7 @@ class ModelPusher:
 
     def initiate_model_pusher(self,) -> ModelPusherArtifact:
         try:
+            logging.info("Into the initiate_model_pusher function of ModelPusher class")
             trained_model_path = self.model_eval_artifact.current_trained_model_path
             trained_model_report_path = self.model_eval_artifact.current_model_report_file_path
             
