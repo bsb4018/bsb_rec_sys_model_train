@@ -4,6 +4,8 @@ from dataclasses import dataclass
 class DataIngestionArtifact:
     trained_interactions_file_path: str
     test_interactions_file_path: str
+    trained_courses_file_path:str
+    test_courses_file_path:str
     interactions_all_data_file_path: str
     courses_all_data_file_path: str
 
@@ -18,12 +20,19 @@ class ModelEvaluationArtifact:
     improved_hitrate: float
     best_model_path: str
     best_model_report_path: str
-    current_trained_model_path: str
-    current_model_report_file_path: str
+    current_interactions_model_path: str
+    current_interactions_model_report_file_path: str
+    current_courses_model_path:str
     
 
 @dataclass
 class ModelPusherArtifact:
-    saved_model_path:str
-    saved_model_report_path:str
     model_file_path:str
+    best_interactions_model_file:str
+    best_courses_model_file:str
+    best_interactions_model_report_file:str
+    saved_best_interactions_model_file:str
+    saved_best_courses_model_file:str
+    saved_best_interactions_model_report_file:str
+
+    

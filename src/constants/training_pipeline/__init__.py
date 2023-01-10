@@ -20,7 +20,10 @@ DATA_INGESTION_INTERACTIONS_FILE_NAME: str = "interactions.parquet"
 DATA_INGESTION_COURSES_FILE_NAME: str = "courses.parquet"
 DATA_INGESTION_INTERACTIONS_TRAIN_FILE_NAME: str = "train_interactions.parquet"
 DATA_INGESTION_INTERACTIONS_TEST_FILE_NAME: str = "test_interactions.parquet"
+DATA_INGESTION_COURSES_TRAIN_FILE_NAME: str = "train_courses.parquet"
+DATA_INGESTION_COURSES_TEST_FILE_NAME: str = "test_courses.parquet"
 DATA_INGESTION_INTERACTIONS_SPLIT_PERCENTAGE: float = 0.25
+DATA_INGESTION_COURSES_SPLIT_PERCENTAGE: float = 0.20
 
 
 '''
@@ -44,4 +47,7 @@ MODEL_EVALUATION_REPORT_NAME= "report.json"
 Model Pusher ralated constant start with MODEL_PUSHER VAR NAME
 '''
 MODEL_PUSHER_DIR_NAME = "model_pusher"
+BEST_INTERACTIONS_MODEL_FILE_NAME = "interactions_best.pkl"
+BEST_COURSES_MODEL_FILE_NAME = "courses_best.pkl"
+BEST_INTERACTIONS_MODEL_REPORT_FILE_NAME = "best_interactions_model_report.json"
 MODEL_PUSHER_SAVED_MODEL_DIR = SAVED_MODEL_DIR

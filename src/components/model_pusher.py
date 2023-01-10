@@ -18,8 +18,9 @@ class ModelPusher:
     def initiate_model_pusher(self,) -> ModelPusherArtifact:
         try:
             logging.info("Into the initiate_model_pusher function of ModelPusher class")
-            trained_model_path = self.model_eval_artifact.current_trained_model_path
-            trained_model_report_path = self.model_eval_artifact.current_model_report_file_path
+            trained_interactions_model_path = self.model_eval_artifact.current_trained_model_path
+            trained_interactions_model_report_path = self.model_eval_artifact.current_model_report_file_path
+            #trained_courses_model_path = self.model_eval_artifact.
             
             #Pushing the trained model in the model storage space
             model_file_path = self.model_pusher_config.model_file_path
@@ -37,7 +38,8 @@ class ModelPusher:
             shutil.copy(src=trained_model_report_path, dst=saved_model_report_path)
 
             #Prepare artifact
-            model_pusher_artifact = ModelPusherArtifact(saved_model_path=saved_model_path, saved_model_report_path=saved_model_report_path, model_file_path=model_file_path)
+            model_pusher_artifact = ModelPusherArtifact(model_file_path=saved_model_path, \
+                saved_model_report_path=saved_model_report_path, model_file_path=model_file_path)
             return model_pusher_artifact
 
         except Exception as e:
