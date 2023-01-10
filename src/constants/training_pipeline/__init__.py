@@ -20,11 +20,7 @@ DATA_INGESTION_INTERACTIONS_FILE_NAME: str = "interactions.parquet"
 DATA_INGESTION_COURSES_FILE_NAME: str = "courses.parquet"
 DATA_INGESTION_INTERACTIONS_TRAIN_FILE_NAME: str = "train_interactions.parquet"
 DATA_INGESTION_INTERACTIONS_TEST_FILE_NAME: str = "test_interactions.parquet"
-DATA_INGESTION_COURSES_TRAIN_FILE_NAME: str = "train_courses.parquet"
-DATA_INGESTION_COURSES_TEST_FILE_NAME: str = "test_courses.parquet"
 DATA_INGESTION_INTERACTIONS_SPLIT_PERCENTAGE: float = 0.25
-DATA_INGESTION_COURSES_SPLIT_PERCENTAGE: float = 0.20
-
 
 '''
 MODEL TRAINER related constant start with MODEL_TRAINER var name

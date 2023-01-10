@@ -30,17 +30,9 @@ class DataIngestionConfig:
             self.data_ingestion_dir, training_pipeline.DATA_INGESTION_SPLIT_DATA_DIR, training_pipeline.DATA_INGESTION_INTERACTIONS_TEST_FILE_NAME
         )
 
-        self.courses_train_file_path: str = os.path.join(
-            self.data_ingestion_dir, training_pipeline.DATA_INGESTION_SPLIT_DATA_DIR, training_pipeline.DATA_INGESTION_COURSES_TRAIN_FILE_NAME
-        )
-        self.courses_test_file_path: str = os.path.join(
-            self.data_ingestion_dir, training_pipeline.DATA_INGESTION_SPLIT_DATA_DIR, training_pipeline.DATA_INGESTION_COURSES_TEST_FILE_NAME
-        )
-
-
         self.interactions_split_percentage: float = training_pipeline.DATA_INGESTION_INTERACTIONS_SPLIT_PERCENTAGE
-        self.courses_split_percentage: float = training_pipeline.DATA_INGESTION_COURSES_SPLIT_PERCENTAGE
-        
+       
+
 class ModelTrainerConfig:
     def __init__(self,training_pipeline_config:TrainingPipelineConfig):
         self.model_trainer_dir: str = os.path.join(

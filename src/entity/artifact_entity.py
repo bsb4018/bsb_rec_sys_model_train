@@ -4,8 +4,6 @@ from dataclasses import dataclass
 class DataIngestionArtifact:
     trained_interactions_file_path: str
     test_interactions_file_path: str
-    trained_courses_file_path:str
-    test_courses_file_path:str
     interactions_all_data_file_path: str
     courses_all_data_file_path: str
 

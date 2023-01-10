@@ -128,33 +128,6 @@ class DataIngestion:
             logging.exception(e)
             raise TrainException(e,sys)
 
-    def split_ingested_courses_features_data(self):
-        try:
-            #log start
-            logging.info("Into the split_ingested_courses_features_data function of DataIngestion class")
-            #load the data from parquet file
-            courses = pd.read_parquet(self.data_ingestion_config.all_courses_file_path)
-            
-            #do train test split
-            test_size = self.data_ingestion_config.courses_split_percentage
-            courses_train, courses_valid = train_test_split(courses, test_size=test_size, random_state=48)
-
-            #check and create train directory and save the training data
-            #Save to the proper directory -> train
-            dir_path = os.path.dirname(self.data_ingestion_config.courses_train_file_path)
-            os.makedirs(dir_path, exist_ok=True)
-            courses_train.to_parquet(self.data_ingestion_config.courses_train_file_path, index=False)
-
-            #check and create test directory and save the test data
-            #Save to the proper directory -> test
-            dir_path = os.path.dirname(self.data_ingestion_config.courses_test_file_path)
-            os.makedirs(dir_path, exist_ok=True)
-            courses_valid.to_parquet(self.data_ingestion_config.courses_test_file_path, index=False)
-            #log complete
-            logging.info("Saved artifact. Leaving the split_ingested_courses_features_data function of DataIngestion class")
-            
-        except Exception as e:
-            raise TrainException(e,sys)
 
     def initiate_data_ingestion(self) -> DataIngestionArtifact:
 
@@ -167,13 +140,9 @@ class DataIngestion:
 
             self.split_ingested_interaction_features_data()
 
-            self.split_ingested_courses_features_data()
-
             data_ingestion_artifact = DataIngestionArtifact( 
                 trained_interactions_file_path = self.data_ingestion_config.interactions_train_file_path,
                 test_interactions_file_path = self.data_ingestion_config.interactions_test_file_path,
-                trained_courses_file_path = self.data_ingestion_config.courses_train_file_path,
-                test_courses_file_path = self.data_ingestion_config.courses_test_file_path,
                 interactions_all_data_file_path = self.data_ingestion_config.all_interactions_file_path,
                 courses_all_data_file_path = self.data_ingestion_config.all_courses_file_path
             )
