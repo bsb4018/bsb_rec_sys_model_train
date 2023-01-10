@@ -18,9 +18,8 @@ class ModelPusher:
     def initiate_model_pusher(self,) -> ModelPusherArtifact:
         try:
             logging.info("Into the initiate_model_pusher function of ModelPusher class")
-            trained_interactions_model_path = self.model_eval_artifact.current_trained_model_path
-            trained_interactions_model_report_path = self.model_eval_artifact.current_model_report_file_path
-            #trained_courses_model_path = self.model_eval_artifact.
+            trained_model_path = self.model_eval_artifact.current_trained_model_path
+            trained_model_report_path = self.model_eval_artifact.current_model_report_file_path
             
             #Pushing the trained model in the model storage space
             model_file_path = self.model_pusher_config.model_file_path
