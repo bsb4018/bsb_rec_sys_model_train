@@ -36,10 +36,10 @@ class ModelTrainer:
         except Exception as e:
             raise TrainException(e,sys)
 
-    def model_training_similar_courses(self, all_courses_file_path):
+    def model_training_similar_courses(self, train_courses_file_path):
         try:
             logging.info("Into the  model_training_similar_courses function of ModelTrainer class")
-            coursesdf = pd.read_parquet(all_courses_file_path)
+            coursesdf = pd.read_parquet(train_courses_file_path)
             coursesdf['course_tags'] = coursesdf['course_tags'].str.lower()
 
             #Train the model on simmilar courses
@@ -60,10 +60,10 @@ class ModelTrainer:
             logging.info("Into the initiate_model_trainer function of ModelTrainer class")
             train_interactions_file_path = self.data_ingestion_artifact.trained_interactions_file_path
             #test_interactions_file_path = self.data_ingestion_artifact.test_interactions_file_path
-            all_courses_file_path = self.data_ingestion_artifact.courses_all_data_file_path
+            train_courses_file_path = self.data_ingestion_artifact.trained_courses_file_path
    
             logging.info("Training the similar courses data")
-            model_courses_train = self.model_training_similar_courses(all_courses_file_path)
+            model_courses_train = self.model_training_similar_courses(train_courses_file_path)
 
             logging.info("Training the similar users data")
             model_interactions_train = self.model_training_similar_users(train_interactions_file_path)

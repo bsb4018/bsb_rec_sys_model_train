@@ -108,3 +108,9 @@ class ModelEvaluation:
         except Exception as e:
             raise TrainException(e,sys)
 
+    def initiate_model_evaluation(self) -> ModelEvaluationArtifact:
+        try:
+            pass
+        except Exception as e:
+            raise TrainException(e,sys)
+
