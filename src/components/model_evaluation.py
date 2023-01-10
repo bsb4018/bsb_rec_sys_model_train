@@ -3,7 +3,7 @@ from src.exception import TrainException
 import os,sys
 import pandas as pd
 import numpy as np
-from src.components.model_recommendation import Recommendation
+from src.ml.model.model_recommendation import Recommendation
 from src.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact,ModelEvaluationArtifact
 from src.entity.config_entity import ModelEvaluationConfig
 from src.utils.main_utils import load_object, write_json_file, read_json_file

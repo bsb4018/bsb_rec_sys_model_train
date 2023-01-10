@@ -1,8 +1,7 @@
 from src.logger import logging
 from src.exception import TrainException
-import os,sys
+import sys
 import pandas as pd
-from src.components.data_ingestion import DataIngestionArtifact
 
 class Recommendation:
     def __init__(self):
