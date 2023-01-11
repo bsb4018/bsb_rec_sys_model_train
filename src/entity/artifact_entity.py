@@ -11,6 +11,7 @@ class DataIngestionArtifact:
 class ModelTrainerArtifact:
     trained_courses_model_file_path: str
     trained_interactions_model_file_path: str
+    interactions_matrix_file_path: str
 
 @dataclass
 class ModelEvaluationArtifact:
@@ -21,6 +22,7 @@ class ModelEvaluationArtifact:
     current_interactions_model_path: str
     current_interactions_model_report_file_path: str
     current_courses_model_path:str
+    interactions_matrix_file_path: str
     
 
 @dataclass
@@ -30,5 +32,6 @@ class ModelPusherArtifact:
     courses_model_file:str
     saved_best_interactions_model_file:str
     saved_courses_model_file:str
+    saved_interactions_matrix_file_path:str
 
     

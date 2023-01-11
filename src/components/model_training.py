@@ -12,7 +12,7 @@ from sklearn.metrics.pairwise import linear_kernel
 import numpy as np
 from src.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact
 from src.entity.config_entity import ModelTrainerConfig
-from src.utils.main_utils import save_object,save_numpy_array_data
+from src.utils.main_utils import save_object,save_numpy_array_data,save_npz_object
 
 class ModelTrainer:
     def __init__(self,model_trainer_config: ModelTrainerConfig,\
@@ -31,8 +31,9 @@ class ModelTrainer:
             interactions_data_csr = csr_matrix((interactionsdf.rating, (interactionsdf.user_id , interactionsdf.course_id)))
             model = AlternatingLeastSquares(factors=64, regularization=0.05, alpha=2.0, iterations=15)
             model.fit(interactions_data_csr)
+
             logging.info("Exiting the model_training_similar_users function of ModelTrainer class")
-            return model
+            return model,interactions_data_csr
         except Exception as e:
             raise TrainException(e,sys)
 
@@ -66,7 +67,7 @@ class ModelTrainer:
             model_courses_train = self.model_training_similar_courses(all_courses_file_path)
 
             logging.info("Training the similar users data")
-            model_interactions_train = self.model_training_similar_users(train_interactions_file_path)
+            model_interactions_train, interactions_data_csr = self.model_training_similar_users(train_interactions_file_path)
             
             logging.info("Saving the similar courses model")
             model_dir_path = os.path.dirname(self.model_trainer_config.trained_courses_model_file_path)
@@ -78,11 +79,19 @@ class ModelTrainer:
             os.makedirs(model_dir_path,exist_ok=True)
             save_object(self.model_trainer_config.trained_interactions_model_file_path,model_interactions_train)
 
+            logging.info("Saving the similar users matrix")
+            model_dir_path = os.path.dirname(self.model_trainer_config.interactions_matrix_file_path)
+            os.makedirs(model_dir_path,exist_ok=True)
+            #save_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
+            save_npz_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
+            #scipy.sparse.save_npz(model_dir_path, interactions_data_csr)
+
             #Model Trainer artifact
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_courses_model_file_path=self.model_trainer_config.trained_courses_model_file_path,
-                trained_interactions_model_file_path=self.model_trainer_config.trained_interactions_model_file_path)
-            
+                trained_interactions_model_file_path=self.model_trainer_config.trained_interactions_model_file_path,
+                interactions_matrix_file_path = self.model_trainer_config.interactions_matrix_file_path)
+
             logging.info(f"Model trainer artifact: {model_trainer_artifact}")
             return model_trainer_artifact
 

@@ -7,6 +7,7 @@ import yaml
 import json
 from src.exception import TrainException
 from src.logger import logging
+import scipy
 
 def read_yaml_file(file_path: str) -> dict:
     try:
@@ -97,5 +98,32 @@ def write_json_file(file_path: str, content: object, replace: bool = False) -> N
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, "w") as file:
             json.dump(content, file)
+    except Exception as e:
+        raise TrainException(e, sys) from e
+
+def save_npz_object(file_path: str, obj: object) -> None:
+    logging.info("Entered the save_npz_object utility method")
+
+    try:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "wb") as file_obj:
+            scipy.sparse.save_npz(file_obj, obj)
+
+        logging.info("Exited the save_object utility method")
+
+    except Exception as e:
+        raise TrainException(e, sys) from e
+
+def load_npz_object(file_path: str) -> object:
+    logging.info("Entered the load_npz_object method")
+
+    try:
+        with open(file_path, "rb") as file_obj:
+            obj = scipy.sparse.load_npz(file_obj)
+
+        logging.info("Exited the load_object method")
+
+        return obj
+
     except Exception as e:
         raise TrainException(e, sys) from e

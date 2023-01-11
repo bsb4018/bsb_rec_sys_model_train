@@ -29,7 +29,7 @@ MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_COURSES_MODEL_NAME: str = "model_courses.pkl"
 MODEL_TRAINER_TRAINED_INTERACTIONS_MODEL_NAME: str = "model_interactions.pkl"
-
+MODEL_TRAINER_INTERACTIONS_MATRIX_FILE_NAME: str = "interactions_matrix.npz"
 
 '''
 MODEL EVALUATION ralated constant start with MODEL_EVALUATION VAR NAME
@@ -55,3 +55,4 @@ SAVED_MODEL_DIR = os.path.join("saved_models")
 PRODUCTION_INTERACTIONS_MODEL_FILE_NAME = "production_interactions_model.pkl"
 PRODUCTION_COURSES_MODEL_FILE_NAME = "production_courses_model.pkl"
 PRODUCTION_INTERACTIONS_MODEL_REPORT_FILE_NAME = "production_interactions_model_report.json"
+PRODUCTION_INTERACTIONS_MATRIX_FILE_NAME = "production_interaction_matrix.npz"

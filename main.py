@@ -1,11 +1,15 @@
 from src.pipeline.train_pipeline import TrainPipeline
+import logging
+import warnings
+warnings.filterwarnings("ignore")
+
+def main():
+    try:
+        train_pipeline = TrainPipeline()
+        train_pipeline.run_pipeline()
+    except Exception as e:
+        print(e)
+        logging.exception(e)
 
 if __name__ == "__main__":
-        
-        train_pipeline = TrainPipeline()
-        if train_pipeline.is_pipeline_running:
-                print("Training pipeline is already running.")
-
-        train_pipeline.run_pipeline()
-        print("Training successful !!")
-        
+    main()

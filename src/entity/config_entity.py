@@ -46,6 +46,10 @@ class ModelTrainerConfig:
             self.model_trainer_dir, training_pipeline.MODEL_TRAINER_TRAINED_MODEL_DIR, 
             training_pipeline.MODEL_TRAINER_TRAINED_INTERACTIONS_MODEL_NAME
         )
+        self.interactions_matrix_file_path: str = os.path.join(
+            self.model_trainer_dir, training_pipeline.MODEL_TRAINER_TRAINED_MODEL_DIR, 
+            training_pipeline.MODEL_TRAINER_INTERACTIONS_MATRIX_FILE_NAME
+        )
         
 
 class ModelEvaluationConfig: 
@@ -77,3 +81,6 @@ class ModelPusherConfig:
         
         self.saved_production_interactions_model_report_file = os.path.join(self.saved_production_model_file_path,\
             training_pipeline.PRODUCTION_INTERACTIONS_MODEL_REPORT_FILE_NAME)
+
+        self.saved_production_interactions_matrix_file = os.path.join(self.saved_production_model_file_path,\
+            training_pipeline.PRODUCTION_INTERACTIONS_MATRIX_FILE_NAME)
