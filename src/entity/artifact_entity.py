@@ -27,10 +27,8 @@ class ModelEvaluationArtifact:
 class ModelPusherArtifact:
     model_file_path:str
     best_interactions_model_file:str
-    best_courses_model_file:str
-    best_interactions_model_report_file:str
+    courses_model_file:str
     saved_best_interactions_model_file:str
-    saved_best_courses_model_file:str
-    saved_best_interactions_model_report_file:str
+    saved_courses_model_file:str
 
     

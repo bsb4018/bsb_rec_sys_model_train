@@ -67,17 +67,13 @@ class ModelPusherConfig:
         self.best_interactions_model_report_file = os.path.join(self.model_pusher_dir, training_pipeline.BEST_INTERACTIONS_MODEL_REPORT_FILE_NAME)
         
         timestamp = round(datetime.now().timestamp())
-        self.saved_best_interactions_model_file=os.path.join(
-            training_pipeline.SAVED_MODEL_DIR,
-            f"{timestamp}",
-            training_pipeline.BEST_INTERACTIONS_MODEL_FILE_NAME)
+        self.saved_production_model_file_path = os.path.join(training_pipeline.SAVED_MODEL_DIR,f"{timestamp}")
 
-        self.saved_best_courses_model_file=os.path.join(
-            training_pipeline.SAVED_MODEL_DIR,
-            f"{timestamp}",
-            training_pipeline.BEST_COURSES_MODEL_FILE_NAME)
+        self.saved_production_interactions_model_file= os.path.join(self.saved_production_model_file_path,\
+            training_pipeline.PRODUCTION_INTERACTIONS_MODEL_FILE_NAME)
 
-        self.saved_best_interactions_model_report_file=os.path.join(
-            training_pipeline.SAVED_MODEL_DIR,
-            f"{timestamp}",
-            training_pipeline.BEST_INTERACTIONS_MODEL_REPORT_FILE_NAME)
+        self.saved_production_courses_model_file= os.path.join(self.saved_production_model_file_path,\
+            training_pipeline.PRODUCTION_COURSES_MODEL_FILE_NAME)
+        
+        self.saved_production_interactions_model_report_file = os.path.join(self.saved_production_model_file_path,\
+            training_pipeline.PRODUCTION_INTERACTIONS_MODEL_REPORT_FILE_NAME)

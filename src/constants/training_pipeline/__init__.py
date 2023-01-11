@@ -1,13 +1,13 @@
 import os
 
-SAVED_MODEL_DIR =os.path.join("saved_models")
-PIPELINE_NAME: str = "course_recommend"
-ARTIFACT_DIR: str = "artifact"
-BEST_MODEL_FILE_NAME = "best_model.pkl"
-BEST_MODEL_REPORT_FILE_NAME = "best_model_report.json"
+
 '''
 Defining basic and common file names
 '''
+
+PIPELINE_NAME: str = "course_recommend"
+ARTIFACT_DIR: str = "artifact"
+
 
 '''
 Data Ingestion related constant start with DATA_INGESTION VAR NAME
@@ -46,4 +46,12 @@ MODEL_PUSHER_DIR_NAME = "model_pusher"
 BEST_INTERACTIONS_MODEL_FILE_NAME = "interactions_best.pkl"
 BEST_COURSES_MODEL_FILE_NAME = "courses_best.pkl"
 BEST_INTERACTIONS_MODEL_REPORT_FILE_NAME = "best_interactions_model_report.json"
-MODEL_PUSHER_SAVED_MODEL_DIR = SAVED_MODEL_DIR
+
+
+'''
+Saved Models for Production
+'''
+SAVED_MODEL_DIR = os.path.join("saved_models")
+PRODUCTION_INTERACTIONS_MODEL_FILE_NAME = "production_interactions_model.pkl"
+PRODUCTION_COURSES_MODEL_FILE_NAME = "production_courses_model.pkl"
+PRODUCTION_INTERACTIONS_MODEL_REPORT_FILE_NAME = "production_interactions_model_report.json"

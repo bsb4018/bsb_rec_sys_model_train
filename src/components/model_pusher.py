@@ -15,30 +15,43 @@ class ModelPusher:
         except Exception as e:
             raise TrainException(e,sys)
 
-    def initiate_model_pusher(self,) -> ModelPusherArtifact:
+    def initiate_model_pusher(self) -> ModelPusherArtifact:
         try:
             logging.info("Into the initiate_model_pusher function of ModelPusher class")
-            trained_model_path = self.model_eval_artifact.current_trained_model_path
-            trained_model_report_path = self.model_eval_artifact.current_model_report_file_path
-            
-            #Pushing the trained model in the model storage space
-            model_file_path = self.model_pusher_config.model_file_path
+            trained_interactions_model_path = self.model_eval_artifact.current_interactions_model_path
+            courses_model_path = self.model_eval_artifact.current_courses_model_path
+            current_interactions_model_report_path = self.model_eval_artifact.current_interactions_model_report_file_path
+
+            best_interactions_model = self.model_eval_artifact.best_model_path
+            best_interactions_model_report = self.model_eval_artifact.best_model_report_path
+
+            #Pushing the trained interaction model and the courses model in the model pusher directory
+            model_file_path = self.model_pusher_config.model_pusher_dir
             os.makedirs(os.path.dirname(model_file_path),exist_ok=True)
-            shutil.copy(src=trained_model_path, dst=model_file_path)
+            os.makedirs(os.path.dirname(self.model_pusher_config.best_interactions_model_file),exist_ok=True)
+            shutil.copy(src=trained_interactions_model_path, dst=self.model_pusher_config.best_interactions_model_file)
+            os.makedirs(os.path.dirname(self.model_pusher_config.best_courses_model_file),exist_ok=True)
+            shutil.copy(src=courses_model_path, dst=self.model_pusher_config.best_courses_model_file)
+            os.makedirs(os.path.dirname(self.model_pusher_config.best_interactions_model_report_file),exist_ok=True)
+            shutil.copy(src=current_interactions_model_report_path, dst=self.model_pusher_config.best_interactions_model_report_file)
 
-            #Pushing the trained model in a the saved path for production
-            saved_model_path = self.model_pusher_config.saved_model_path
-            os.makedirs(os.path.dirname(saved_model_path),exist_ok=True)
-            shutil.copy(src=trained_model_path, dst=saved_model_path)
-
-            #Pushing the trained model report in a the saved path for production
-            saved_model_report_path = self.model_pusher_config.saved_model_report_path
-            os.makedirs(os.path.dirname(saved_model_path),exist_ok=True)
-            shutil.copy(src=trained_model_report_path, dst=saved_model_report_path)
+            #Pushing the trained interaction model and the courses model in the saved for production directory
+            production_model_file_path = self.model_pusher_config.saved_production_model_file_path
+            os.makedirs(os.path.dirname(production_model_file_path),exist_ok=True)
+            os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_interactions_model_file),exist_ok=True)
+            shutil.copy(src=best_interactions_model, dst=self.model_pusher_config.saved_production_interactions_model_file)
+            os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_courses_model_file),exist_ok=True)
+            shutil.copy(src=courses_model_path, dst=self.model_pusher_config.saved_production_courses_model_file)
+            os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_interactions_model_report_file),exist_ok=True)
+            shutil.copy(src=best_interactions_model_report, dst=self.model_pusher_config.saved_production_interactions_model_report_file)
 
             #Prepare artifact
-            model_pusher_artifact = ModelPusherArtifact(model_file_path=saved_model_path, \
-                saved_model_report_path=saved_model_report_path, model_file_path=model_file_path)
+            model_pusher_artifact = ModelPusherArtifact(model_file_path=model_file_path, \
+                best_interactions_model_file=self.model_pusher_config.best_interactions_model_file, \
+                    courses_model_file=self.model_pusher_config.best_courses_model_file,\
+                        saved_best_interactions_model_file=self.model_pusher_config.saved_production_interactions_model_file,\
+                        saved_courses_model_file=self.model_pusher_config.saved_production_courses_model_file
+                    )
             return model_pusher_artifact
 
         except Exception as e:

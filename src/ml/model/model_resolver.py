@@ -1,5 +1,5 @@
 import os
-from src.constants.training_pipeline import SAVED_MODEL_DIR, BEST_MODEL_FILE_NAME,BEST_MODEL_REPORT_FILE_NAME
+from src.constants.training_pipeline import SAVED_MODEL_DIR, PRODUCTION_INTERACTIONS_MODEL_FILE_NAME, PRODUCTION_INTERACTIONS_MODEL_REPORT_FILE_NAME
 
 class ModelResolver:
     def __init__(self, model_dir=SAVED_MODEL_DIR):
@@ -13,7 +13,7 @@ class ModelResolver:
         try:
             timestamps = list(map(int, os.listdir(self.model_dir)))
             latest_timestamp = max(timestamps)
-            latest_model_path = os.path.join(self.model_dir, f"{latest_timestamp}", BEST_MODEL_FILE_NAME)
+            latest_model_path = os.path.join(self.model_dir, f"{latest_timestamp}", PRODUCTION_INTERACTIONS_MODEL_FILE_NAME)
             return latest_model_path
         
         except Exception as e:
@@ -41,7 +41,7 @@ class ModelResolver:
         try:
             timestamps = list(map(int, os.listdir(self.model_dir)))
             latest_timestamp = max(timestamps)
-            latest_model_path = os.path.join(self.model_dir, f"{latest_timestamp}", BEST_MODEL_REPORT_FILE_NAME)
+            latest_model_path = os.path.join(self.model_dir, f"{latest_timestamp}",  PRODUCTION_INTERACTIONS_MODEL_REPORT_FILE_NAME)
             return latest_model_path
         
         except Exception as e:

@@ -60,7 +60,7 @@ class TrainPipeline:
             logging.info("Entered the start_model_evaluation method of TrainPipeline class")
             model_eval_config = ModelEvaluationConfig(self.training_pipeline_config)
             model_eval = ModelEvaluation(model_eval_config, data_ingestion_artifact, model_trainer_artifact)
-            model_eval_artifact = model_eval.model_evaluating_similar_users()
+            model_eval_artifact = model_eval.initiate_model_evaluation()
 
             logging.info("Performed the Model Evaluation operation")
             logging.info(
