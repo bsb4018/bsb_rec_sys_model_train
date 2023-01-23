@@ -15,7 +15,7 @@ class DataIngestion:
     def __init__(self,data_ingestion_config: DataIngestionConfig):
         try:
             self.data_ingestion_config = data_ingestion_config
-            self.store = FeatureStore(repo_path=FEAST_FEATURE_STORE_REPO_PATH)
+            self.store = FeatureStore(repo_path="D:/work2/course_recommend_app/cr_data_collection/champion_stag") #FEAST_FEATURE_STORE_REPO_PATH
             self.interaction_df = pd.read_parquet(path = INTERACTIONS_DATA_FILE_PATH)
             self.courses_df = pd.read_parquet(path = COURSES_DATA_FILE_PATH)
         except Exception as e:
@@ -39,6 +39,8 @@ class DataIngestion:
             dir_path = os.path.dirname(self.data_ingestion_config.all_courses_file_path)
             os.makedirs(dir_path, exist_ok=True)
             response_data.to_parquet(self.data_ingestion_config.all_courses_file_path, index=False)
+
+            #indices = pd.Series(courses_data.index,index=courses_data['course_name']).drop_duplicates()
 
         except Exception as e:
             logging.exception(e)

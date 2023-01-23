@@ -82,8 +82,8 @@ class ModelTrainer:
             logging.info("Saving the similar users matrix")
             model_dir_path = os.path.dirname(self.model_trainer_config.interactions_matrix_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
-            #save_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
-            save_npz_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
+            save_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
+            #save_npz_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
             #scipy.sparse.save_npz(model_dir_path, interactions_data_csr)
 
             #Model Trainer artifact

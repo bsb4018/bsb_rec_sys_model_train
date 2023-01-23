@@ -6,6 +6,7 @@ class DataIngestionArtifact:
     test_interactions_file_path: str
     interactions_all_data_file_path: str
     courses_all_data_file_path: str
+    
 
 @dataclass
 class ModelTrainerArtifact:
