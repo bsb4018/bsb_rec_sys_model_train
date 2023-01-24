@@ -8,16 +8,16 @@ from feast import FeatureStore
 from feast.infra.offline_stores.file_source import SavedDatasetFileStorage
 from src.entity.config_entity import DataIngestionConfig
 from src.entity.artifact_entity import DataIngestionArtifact
-from src.constants.file_path_constants import FEAST_FEATURE_STORE_REPO_PATH,INTERACTIONS_DATA_FILE_PATH,COURSES_DATA_FILE_PATH
+#from src.constants.file_path_constants import FEAST_FEATURE_STORE_REPO_PATH,INTERACTIONS_DATA_FILE_PATH,COURSES_DATA_FILE_PATH
 from sklearn.model_selection import train_test_split
 
 class DataIngestion:
     def __init__(self,data_ingestion_config: DataIngestionConfig):
         try:
             self.data_ingestion_config = data_ingestion_config
-            self.store = FeatureStore(repo_path="D:/work2/course_recommend_app/cr_data_collection/champion_stag") #FEAST_FEATURE_STORE_REPO_PATH
-            self.interaction_df = pd.read_parquet(path = INTERACTIONS_DATA_FILE_PATH)
-            self.courses_df = pd.read_parquet(path = COURSES_DATA_FILE_PATH)
+            self.store = FeatureStore(repo_path="rec_sys_fs") #FEAST_FEATURE_STORE_REPO_PATH
+            self.interaction_df = pd.read_parquet(path = "data/interactions.parquet")
+            self.courses_df = pd.read_parquet(path = "data/courses.parquet")
         except Exception as e:
             logging.exception(e)
             raise TrainException(e,sys)
