@@ -36,7 +36,8 @@ class ModelTrainer:
             return model,interactions_data_csr
         except Exception as e:
             raise TrainException(e,sys)
-
+    
+    '''
     def model_training_similar_courses(self, all_courses_file_path):
         try:
             logging.info("Into the  model_training_similar_courses function of ModelTrainer class")
@@ -55,12 +56,13 @@ class ModelTrainer:
 
         except Exception as e:
             raise TrainException(e,sys)
+    '''
     
     def initiate_model_trainer(self) -> ModelTrainerArtifact:
         try:
             logging.info("Into the initiate_model_trainer function of ModelTrainer class")
             train_interactions_file_path = self.data_ingestion_artifact.trained_interactions_file_path
-            #test_interactions_file_path = self.data_ingestion_artifact.test_interactions_file_path
+            test_interactions_file_path = self.data_ingestion_artifact.test_interactions_file_path
             all_courses_file_path = self.data_ingestion_artifact.courses_all_data_file_path
    
             logging.info("Training the similar courses data")
