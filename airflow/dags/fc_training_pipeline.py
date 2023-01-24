@@ -20,7 +20,7 @@ with DAG(
     # [END default_args]
     description='Course Recommendation Pipeline Project',
     schedule_interval="@weekly",
-    start_date=pendulum.datetime(2023, 02, 23, tz="UTC"),
+    start_date=pendulum.datetime(2023, 2, 23, tz="UTC"),
     catchup=False,
     tags=['example'],
 ) as dag:
@@ -31,10 +31,10 @@ with DAG(
 
     # [START extract_function]
 
-
-    from src.pipeline.train_pipeline import TrainPipeline
+    from src.configurations.training_config import RecommenderConfig
+    from src.pipeline.train_pipeline import TrainingPipeline
     from src.entity.config_entity import *
-    training_pipeline = TrainingPipelineConfig()
+    training_pipeline = TrainingPipeline(RecommenderConfig())
 
     def data_ingestion(**kwargs):
         from src.entity.artifact_entity import DataIngestionArtifact,\
@@ -78,11 +78,9 @@ with DAG(
         ti  = kwargs['ti']
         model_evaluation_artifact = ti.xcom_pull(task_ids="model_evaluation",key="model_evaluation_artifact")
         model_evaluation_artifact=ModelEvaluationArtifact(*(model_evaluation_artifact))
-        model_trainer_artifact = ti.xcom_pull(task_ids="model_trainer",key="model_trainer_artifact")
-        model_trainer_artifact=ModelTrainerArtifact.construct_object(**model_trainer_artifact)
-
+        
         if model_evaluation_artifact.is_model_accepted:
-            model_pusher_artifact = training_pipeline.start_model_pusher(model_trainer_artifact=model_trainer_artifact)
+            model_pusher_artifact = training_pipeline.start_model_pusher(model_eval_artifact=model_evaluation_artifact)
             print(f'Model pusher artifact: {model_pusher_artifact}')
         else:
             print("Trained model rejected.")

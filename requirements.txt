@@ -19,6 +19,6 @@ pytest
 tox
 flake8
 implicit
-rankfm
+#rankfm
 pymongo[srv]
 -e.
