@@ -19,8 +19,8 @@ with DAG(
     default_args={'retries': 2}, #pipeline if fails once will retty once again
     # [END default_args]
     description='Course Recommendation Pipeline Project',
-    schedule_interval=None,    #"@weekly",
-    start_date=pendulum.datetime(2022, 11, 20, tz="UTC"),
+    schedule_interval="@weekly",
+    start_date=pendulum.datetime(2023, 02, 23, tz="UTC"),
     catchup=False,
     tags=['example'],
 ) as dag:
