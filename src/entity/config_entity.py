@@ -16,6 +16,10 @@ ModelTrainerConfig = namedtuple("ModelTrainerConfig", ["model_trainer_dir", "tra
 ModelEvaluationConfig = namedtuple("ModelEvaluationConfig",
                                    ["model_evaluation_dir", "report_file_path", "change_threshold"])
 
+#ModelPusherConfig = namedtuple("ModelPusherConfig", ["model_dir", "bucket_name"])
+
+
+
 ModelPusherConfig = namedtuple("ModelPusherConfig", ["model_pusher_dir", 
                                                      "best_interactions_model_file",\
                                                         "best_interactions_model_report_file",\

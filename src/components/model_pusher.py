@@ -19,7 +19,6 @@ class ModelPusher:
         try:
             logging.info("Into the initiate_model_pusher function of ModelPusher class")
             trained_interactions_model_path = self.model_eval_artifact.current_interactions_model_path
-            courses_model_path = self.model_eval_artifact.current_courses_model_path
             current_interactions_model_report_path = self.model_eval_artifact.current_interactions_model_report_file_path
 
             best_interactions_model = self.model_eval_artifact.best_model_path

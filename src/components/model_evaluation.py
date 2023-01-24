@@ -67,7 +67,7 @@ class ModelEvaluation:
             evaluation_report = {'hit_rate': model_hitrate*100, 'precision': model_preison*100, 'recall': model_recall*100}
             write_json_file(self.model_eval_config.report_file_path, evaluation_report)
 
-            return model_hitrate
+            return model_hitrate*100
     
         except Exception as e:
             raise TrainException(e,sys)
@@ -80,8 +80,6 @@ class ModelEvaluation:
             #model_evaluation_path = self.model_eval_config.model_evaluation_dir
             #os.makedirs(os.path.dirname(model_evaluation_path),exist_ok=True)
             #shutil.copy(src=self.model_eval_config.report_file_path, dst=self.model_eval_config.report_file_path)
-
-            self.model_trainer_artifact.trained_courses_model_file_path
             self.model_trainer_artifact.trained_interactions_model_file_path
             
             is_model_accepted = True
@@ -105,10 +103,10 @@ class ModelEvaluation:
 
             best_model_report_path = model_resolver.get_best_model_report_path()
             best_model_report = read_json_file(best_model_report_path)
-            best_hit_rate = best_model_report["hit_rate"] / 100
+            best_hit_rate = best_model_report["hit_rate"]
             current_hit_rate = current_model_hit_rate
 
-            improved_hitrate = abs(math.floor(current_hit_rate) - math.floor(best_hit_rate))
+            improved_hitrate = abs(current_hit_rate - best_hit_rate)
             if improved_hitrate >= self.model_eval_config.change_threshold:
                 is_model_accepted=True   
             else:

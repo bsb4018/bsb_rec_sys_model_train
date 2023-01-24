@@ -4,16 +4,16 @@ import os, sys
 from datetime import datetime
 from src.entity.config_entity import ModelEvaluationConfig, ModelPusherConfig, ModelTrainerConfig, TrainingPipelineConfig, DataIngestionConfig
 from src.constants.training_pipeline import *
-from src.constants import TIMESTAMP
+from datetime import datetime
 class RecommenderConfig:
-    def __init__(self, pipeline_name = PIPELINE_NAME, timestamp = TIMESTAMP):
-        self.timestamp = timestamp
-        self.pipeline_name = pipeline_name
+    def __init__(self):
+        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.pipeline_name = PIPELINE_NAME
         self.pipeline_config = self.get_pipeline_config()
 
     def get_pipeline_config(self) -> TrainingPipelineConfig:
         try:
-            artifact_dir = ARTIFACT_DIR
+            artifact_dir = os.path.join(ARTIFACT_DIR,self.timestamp)
             pipeline_config = TrainingPipelineConfig(pipeline_name=self.pipeline_name,
                                                      artifact_dir=artifact_dir)
             logging.info(f"Pipeline configuration: {pipeline_config}")
@@ -28,11 +28,8 @@ class RecommenderConfig:
             we will store metadata information and ingested file to avoid redundant download
             """
 
-            data_ingestion_master_dir = os.path.join(self.pipeline_config.artifact_dir,DATA_INGESTION_DIR_NAME)
+            data_ingestion_dir = os.path.join(self.pipeline_config.artifact_dir,DATA_INGESTION_DIR_NAME)
         
-            # time based directory for each run
-            data_ingestion_dir = os.path.join(data_ingestion_master_dir,self.timestamp)
-
             data_ingestion_config = DataIngestionConfig(
                 data_ingestion_dir=data_ingestion_dir,
                 all_interactions_file_path=os.path.join(data_ingestion_dir,DATA_INGESTION_ALL_DATA_DIR),
@@ -49,8 +46,7 @@ class RecommenderConfig:
 
     def get_model_trainer_config(self) -> ModelTrainerConfig:
         try:
-            model_trainer_dir = os.path.join(self.pipeline_config.artifact_dir,
-                                             MODEL_TRAINER_DIR_NAME, self.timestamp)
+            model_trainer_dir = os.path.join(self.pipeline_config.artifact_dir,MODEL_TRAINER_DIR_NAME)
             trained_model_file_path = os.path.join(
                 model_trainer_dir, MODEL_TRAINER_TRAINED_MODEL_DIR)
             
@@ -89,8 +85,7 @@ class RecommenderConfig:
     def get_model_pusher_config(self) -> ModelPusherConfig:
         try:
             model_pusher_dir = os.path.join(self.pipeline_config.artifact_dir,MODEL_PUSHER_DIR_NAME)
-            production_timestamp = self.timestamp
-            self.saved_production_model_file_path = os.path.join(SAVED_MODEL_DIR,f"{production_timestamp}")
+            self.saved_production_model_file_path = os.path.join(SAVED_MODEL_DIR,f"{self.timestamp}")
             model_pusher_config = ModelPusherConfig(
                 model_pusher_dir=model_pusher_dir,
                 best_interactions_model_file=os.path.join(model_pusher_dir,BEST_INTERACTIONS_MODEL_FILE_NAME),
