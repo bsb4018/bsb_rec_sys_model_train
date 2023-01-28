@@ -10,24 +10,32 @@ from src.entity.config_entity import DataIngestionConfig
 from src.entity.artifact_entity import DataIngestionArtifact
 #from src.constants.file_path_constants import FEAST_FEATURE_STORE_REPO_PATH,INTERACTIONS_DATA_FILE_PATH,COURSES_DATA_FILE_PATH
 from sklearn.model_selection import train_test_split
+from src.configurations.aws_config import StorageConnection
 
 class DataIngestion:
     def __init__(self,data_ingestion_config: DataIngestionConfig):
         try:
+            self.connection = StorageConnection()
             self.data_ingestion_config = data_ingestion_config
-            self.store = FeatureStore(repo_path="D:/work2/course_recommend_app/cr_data_collection/rec_sys_fs") #FEAST_FEATURE_STORE_REPO_PATH
-            self.interaction_df = pd.read_parquet(path = "data/interactions.parquet")
         except Exception as e:
             logging.exception(e)
+            raise TrainException(e,sys)
+    
+    def get_feature_registry_and_data_from_s3(self):
+        try:
+            self.connection.download_feature_store_registries_s3()
+            self.connection.download_entity_data_s3()
+        except Exception as e:
             raise TrainException(e,sys)
 
     def get_interaction_features_from_feature_store(self):
         try:
             logging.info("Into the get_interaction_features_from_feature_store function of DataIngestion class")
-            interaction_df1 = self.interaction_df
+            store = FeatureStore(repo_path="D:/work2/course_recommend_app/cr_data_collection/rec_sys_fs")
+            interaction_df1 = pd.read_parquet(path = "data/interactions.parquet")
 
             logging.info("Getting Interactions Features from Feast")
-            interaction_data = self.store.get_historical_features(entity_df = interaction_df1, features = \
+            interaction_data = store.get_historical_features(entity_df = interaction_df1, features = \
                 ["interactions_df_feature_view:user_id",\
                     "interactions_df_feature_view:course_id",\
                         "interactions_df_feature_view:rating"]).to_df()
@@ -103,6 +111,8 @@ class DataIngestion:
 
         try:
             logging.info("Entered initiate_data_ingestion method of Data_Ingestion class")
+
+            self.get_feature_registry_and_data_from_s3()
 
             self.get_interaction_features_from_feature_store()
             
