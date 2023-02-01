@@ -28,9 +28,11 @@ class ModelTrainer:
             logging.info("Into the model_training_similar_users function of ModelTrainer class")
             #read interactions data
             interactionsdf = pd.read_parquet(train_interactions_file_path)
-            interactions_data_csr = csr_matrix((interactionsdf.rating, (interactionsdf.user_id , interactionsdf.course_id)))
-            model = AlternatingLeastSquares(factors=64, regularization=0.05, alpha=2.0, iterations=15)
-            model.fit(interactions_data_csr)
+            interactions_data_csr = csr_matrix((interactionsdf.rating, (interactionsdf.course_id , interactionsdf.user_id)))
+            model = AlternatingLeastSquares(factors=20, regularization=0.1, alpha=2.0, iterations=20)
+            alpha_val = 40
+            data_conf = (interactions_data_csr * alpha_val).astype('double')
+            model.fit(data_conf)
 
             logging.info("Exiting the model_training_similar_users function of ModelTrainer class")
             return model,interactions_data_csr
