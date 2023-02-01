@@ -27,6 +27,12 @@ class ModelEvaluation:
         except Exception as e:
             raise TrainException(e,sys)
 
+    def evaluate_training_accuracy(self):
+        try:
+            pass
+        except Exception as e:
+            raise TrainException(e,sys)
+
     def model_evaluating_similar_users(self):
         try:
 

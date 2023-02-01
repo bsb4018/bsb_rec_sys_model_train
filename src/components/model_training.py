@@ -28,7 +28,7 @@ class ModelTrainer:
             logging.info("Into the model_training_similar_users function of ModelTrainer class")
             #read interactions data
             interactionsdf = pd.read_parquet(train_interactions_file_path)
-            interactions_data_csr = csr_matrix((interactionsdf.rating, (interactionsdf.course_id , interactionsdf.user_id)))
+            interactions_data_csr = csr_matrix((interactionsdf.rating.astype(float), (interactionsdf.course_id , interactionsdf.user_id)))
             model = AlternatingLeastSquares(factors=20, regularization=0.1, alpha=2.0, iterations=20)
             alpha_val = 40
             data_conf = (interactions_data_csr * alpha_val).astype('double')
