@@ -120,8 +120,8 @@ class TrainingPipeline:
                 raise Exception("Model Not Pushed to Production")
             
             model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact)
-            self.sync_artifact_dir_to_s3()
-            self.sync_saved_model_dir_to_s3()
+            #self.sync_artifact_dir_to_s3()
+            #self.sync_saved_model_dir_to_s3()
 
             logging.info("Training Pipeline Running Operation Complete")
             logging.info(

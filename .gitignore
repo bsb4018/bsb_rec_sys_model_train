@@ -140,3 +140,5 @@ rec_sys_fs/
 logs/
 artifact/
 saved_models/
+data-entity/
+data-feature/

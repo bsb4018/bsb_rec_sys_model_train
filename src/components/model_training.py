@@ -13,6 +13,9 @@ import numpy as np
 from src.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact
 from src.entity.config_entity import ModelTrainerConfig
 from src.utils.main_utils import save_object,save_numpy_array_data,save_npz_object
+from scipy.sparse import coo_matrix
+from lightfm import LightFM
+from lightfm.evaluation import auc_score
 
 class ModelTrainer:
     def __init__(self,model_trainer_config: ModelTrainerConfig,\
@@ -28,14 +31,29 @@ class ModelTrainer:
             logging.info("Into the model_training_similar_users function of ModelTrainer class")
             #read interactions data
             interactionsdf = pd.read_parquet(train_interactions_file_path)
-            interactions_data_csr = csr_matrix((interactionsdf.rating.astype(float), (interactionsdf.course_id , interactionsdf.user_id)))
-            model = AlternatingLeastSquares(factors=20, regularization=0.1, alpha=2.0, iterations=20)
-            alpha_val = 40
-            data_conf = (interactions_data_csr * alpha_val).astype('double')
-            model.fit(data_conf)
+            id_cols=['user_id','course_id']
+            interactions_train_data = dict()
+            for k in id_cols:
+                interactions_train_data[k] = interactionsdf[k].values
+            
+            events = dict()
+            events['train'] = interactionsdf.event
+
+            n_users=len(np.unique(interactions_train_data['user_id']))
+            n_items=len(np.unique(interactions_train_data['course_id']))
+
+            train_matrix = dict()
+            train_matrix['train'] = coo_matrix((events['train'], 
+                                   (interactions_train_data['user_id'], 
+                                    interactions_train_data['course_id'])), 
+                                    shape=(n_users,n_items))
+
+            # model creation and training
+            model = LightFM(no_components=10, loss='warp')
+            model.fit(train_matrix['train'], epochs=100, num_threads=8)
 
             logging.info("Exiting the model_training_similar_users function of ModelTrainer class")
-            return model,interactions_data_csr
+            return model,train_matrix['train']
         except Exception as e:
             raise TrainException(e,sys)
     

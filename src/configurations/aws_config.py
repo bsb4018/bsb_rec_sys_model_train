@@ -2,7 +2,6 @@ import os
 from from_root import from_root
 from src.constants.cloud_constants import AWS_ACCESS_KEY_ID,AWS_REGION,AWS_SECRET_ACCESS_KEY,S3_FEAST_FEATURE_STORE_BUCKET,S3_ENTITY_DATA_STORE_BUCKET
 from src.constants.file_path_constants import FEAST_FEATURE_STORE_REPO_NAME,FEAST_FEATURE_STORE_REPO_PATH,ENTITY_DATA_FOLDER_NAME
-from src.configurations.aws_config import AwsStorage
 from boto3 import Session
 import os
 

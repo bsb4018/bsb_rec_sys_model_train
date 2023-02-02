@@ -13,7 +13,8 @@ import math
 from pathlib import Path
 from src.ml.model.model_resolver import ModelResolver
 import shutil
-
+from scipy.sparse import coo_matrix
+from lightfm.evaluation import auc_score
 class ModelEvaluation:
     def __init__(self, model_eval_config: ModelEvaluationConfig,
                        data_ingestion_artifact: DataIngestionArtifact,
@@ -27,53 +28,41 @@ class ModelEvaluation:
         except Exception as e:
             raise TrainException(e,sys)
 
-    def evaluate_training_accuracy(self):
-        try:
-            pass
-        except Exception as e:
-            raise TrainException(e,sys)
 
     def model_evaluating_similar_users(self):
         try:
 
-            #Load train data
-            interactions_train_data = pd.read_parquet(self.data_ingestion_artifact.trained_interactions_file_path)
-
             #Load test data
-            interactions_test_data = pd.read_parquet(self.data_ingestion_artifact.test_interactions_file_path)
+            interactions_test_df = pd.read_parquet(self.data_ingestion_artifact.test_interactions_file_path)
 
             #Load trained model
             model = load_object(self.model_trainer_artifact.trained_interactions_model_file_path)
 
-            interactions_test_csr = csr_matrix((interactions_test_data.rating, (interactions_test_data.user_id , interactions_test_data.course_id)))
+            id_cols=['user_id','course_id']
+            interactions_test_data = dict()
+            for k in id_cols:
+                interactions_test_data[k] = interactions_test_df[k].values
+            
+            events = dict()
+            events['test'] = interactions_test_df.event
 
-            generated_recommendations = self.model_recommendation.get_recommendations_similar_users_all(interactions_test_csr,model)
+            n_users=len(np.unique(interactions_test_data['user_id']))
+            n_items=len(np.unique(interactions_test_data['course_id']))
 
-            valid_user_courses = interactions_test_data.groupby('user_id')['course_id'].apply(set).to_dict()
+            test_matrix = dict()
+            test_matrix['test'] = coo_matrix((events['test'], 
+                                   (interactions_test_data['user_id'], 
+                                    interactions_test_data['course_id'])), 
+                                    shape=(n_users,n_items))
 
-            train_users = np.sort(interactions_train_data.user_id.unique())
-            valid_users = np.sort(interactions_test_data.user_id.unique())
-            combined_users = set(train_users) & set(valid_users)
-
-        
-            index_to_user = pd.Series([0])
-            index_to_item = pd.Series([0])
-            index_to_user1 = pd.Series(np.sort(np.unique(interactions_train_data['user_id'])))
-            index_to_item1 = pd.Series(np.sort(np.unique(interactions_train_data['course_id'])))
-            index_to_user = index_to_user.append(index_to_user1,ignore_index=True)
-            index_to_item = index_to_item.append(index_to_item1,ignore_index=True)
-            generated_recommendations = pd.DataFrame(generated_recommendations, index=index_to_user.values).apply(\
-                lambda c: c.map(index_to_item))
-
-            model_hitrate = np.mean([int(len(set(generated_recommendations.loc[u]) & valid_user_courses[u]) > 0) for u in combined_users])
-            model_preison = np.mean([len(set(generated_recommendations.loc[u]) & valid_user_courses[u]) / len(generated_recommendations.loc[u]) for u in combined_users])
-            model_recall = np.mean([len(set(generated_recommendations.loc[u]) & valid_user_courses[u]) / len(valid_user_courses[u]) for u in combined_users])
+            # model creation and training
+            mean_auc_score = auc_score(model, test_matrix['test'], num_threads=10).mean()
 
             #create a dictionary of the merrics and save it
-            evaluation_report = {'hit_rate': model_hitrate*100, 'precision': model_preison*100, 'recall': model_recall*100}
+            evaluation_report = {'mean_accuracy_score': str(mean_auc_score)}
             write_json_file(self.model_eval_config.report_file_path, evaluation_report)
 
-            return model_hitrate*100
+            return mean_auc_score
     
         except Exception as e:
             raise TrainException(e,sys)
@@ -81,7 +70,7 @@ class ModelEvaluation:
     def initiate_model_evaluation(self) -> ModelEvaluationArtifact:
         try:
 
-            current_model_hit_rate = self.model_evaluating_similar_users()
+            current_model_mean_auc_score = self.model_evaluating_similar_users()
 
             #model_evaluation_path = self.model_eval_config.model_evaluation_dir
             #os.makedirs(os.path.dirname(model_evaluation_path),exist_ok=True)
@@ -109,8 +98,8 @@ class ModelEvaluation:
 
             best_model_report_path = model_resolver.get_best_model_report_path()
             best_model_report = read_json_file(best_model_report_path)
-            best_hit_rate = best_model_report["hit_rate"]
-            current_hit_rate = current_model_hit_rate
+            best_hit_rate = float(best_model_report["mean_accuracy_score"])
+            current_hit_rate = current_model_mean_auc_score
 
             improved_hitrate = abs(current_hit_rate - best_hit_rate)
             if improved_hitrate >= self.model_eval_config.change_threshold:
