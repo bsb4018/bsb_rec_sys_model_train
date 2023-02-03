@@ -8,7 +8,6 @@ from feast import FeatureStore
 from feast.infra.offline_stores.file_source import SavedDatasetFileStorage
 from src.entity.config_entity import DataIngestionConfig
 from src.entity.artifact_entity import DataIngestionArtifact
-#from src.constants.file_path_constants import FEAST_FEATURE_STORE_REPO_PATH,INTERACTIONS_DATA_FILE_PATH,COURSES_DATA_FILE_PATH
 from sklearn.model_selection import train_test_split
 from src.configurations.aws_config import StorageConnection
 
@@ -24,32 +23,33 @@ class DataIngestion:
     def get_feature_registry_and_data_from_s3(self):
         try:
             self.connection.download_feature_store_registries_s3()
-            self.connection.download_entity_data_s3()
         except Exception as e:
             raise TrainException(e,sys)
 
     def get_interaction_features_from_feature_store(self):
         try:
             logging.info("Into the get_interaction_features_from_feature_store function of DataIngestion class")
-            store = FeatureStore(repo_path="rec_sys_fs")
-            interaction_df = pd.read_parquet(path = "data-entity/data-interactions-entity.parquet")
+            store = FeatureStore(repo_path="feature_repo")
+            #interaction_df = pd.read_parquet(path = "data-entity/data-interactions-entity.parquet")
 
-            #interaction_entity_sql = f"""
-        #        SELECT interaction_id,CURRENT_TIMESTAMP() as event_timestamp 
-        #        FROM {self.store.get_data_source("interactions_file_source").get_table_query_string()}
-        #        WHERE event_timestamp BETWEEN '2019-01-01' and '2023-01-31'
-        #        GROUP BY interaction_id
-        #    """
+            interaction_entity_sql = f"""
+                SELECT interaction_id,event_timestamp 
+                FROM {store.get_data_source("rs_source_interactions").get_table_query_string()}
+                WHERE event_timestamp BETWEEN '2019-01-01' and '2023-01-31'
+            """
 
             logging.info("Getting Interactions Features from Feast")
-            interaction_data = store.get_historical_features(entity_df = interaction_df, features = \
+            interaction_data = store.get_historical_features(entity_df = interaction_entity_sql, features = \
                 ["interaction_features:user_id",\
                     "interaction_features:course_id",\
                         "interaction_features:event"]).to_df()
         
             logging.info("Forming the response")
             response_data = interaction_data[["user_id", "course_id", "event"]]
-
+            response_data["user_id"] = response_data["user_id"].astype('int64')
+            response_data["user_id"] = response_data["course_id"].astype('int64')
+            response_data["event"] = response_data["event"].astype('int64')
+            response_data.sort_values(by=["user_id"])
             #Save to the proper directory
             dir_path = os.path.dirname(self.data_ingestion_config.all_interactions_file_path)
             os.makedirs(dir_path, exist_ok=True)
@@ -89,7 +89,7 @@ class DataIngestion:
         try:
             logging.info("Entered initiate_data_ingestion method of Data_Ingestion class")
 
-            #self.get_feature_registry_and_data_from_s3()
+            self.get_feature_registry_and_data_from_s3()
 
             self.get_interaction_features_from_feature_store()
             

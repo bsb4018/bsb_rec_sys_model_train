@@ -7,7 +7,7 @@ from src.constants.training_pipeline import *
 from datetime import datetime
 class RecommenderConfig:
     def __init__(self):
-        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         self.pipeline_name = PIPELINE_NAME
         self.pipeline_config = self.get_pipeline_config()
 
