@@ -3,7 +3,6 @@ from src.exception import TrainException
 import os,sys
 import pandas as pd
 import numpy as np
-from src.ml.model.model_recommendation import Recommendation
 from src.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact,ModelEvaluationArtifact
 from src.entity.config_entity import ModelEvaluationConfig
 from src.utils.main_utils import load_object, write_json_file, read_json_file
@@ -23,7 +22,6 @@ class ModelEvaluation:
             self.model_eval_config = model_eval_config
             self.data_ingestion_artifact = data_ingestion_artifact
             self.model_trainer_artifact = model_trainer_artifact
-            self.model_recommendation = Recommendation()
             
         except Exception as e:
             raise TrainException(e,sys)
