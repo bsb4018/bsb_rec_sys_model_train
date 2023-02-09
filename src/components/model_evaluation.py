@@ -13,7 +13,7 @@ from pathlib import Path
 from src.ml.model.model_resolver import ModelResolver
 import shutil
 from scipy.sparse import coo_matrix
-from lightfm.evaluation import auc_score
+from lightfm.evaluation import auc_score,precision_at_k
 class ModelEvaluation:
     def __init__(self, model_eval_config: ModelEvaluationConfig,
                        data_ingestion_artifact: DataIngestionArtifact,
@@ -56,11 +56,13 @@ class ModelEvaluation:
             # model creation and training
             mean_auc_score = auc_score(model, test_matrix['test'], num_threads=10).mean()
 
+            mean_precision_at_5 = precision_at_k(model, test_matrix['test'], k=5).mean()
+
             #create a dictionary of the merrics and save it
-            evaluation_report = {'mean_accuracy_score': str(mean_auc_score)}
+            evaluation_report = {'mean_accuracy_score': str(mean_auc_score), 'mean_precision_at_5': str(mean_precision_at_5)}
             write_json_file(self.model_eval_config.report_file_path, evaluation_report)
 
-            return mean_auc_score
+            return mean_precision_at_5
     
         except Exception as e:
             raise TrainException(e,sys)
@@ -68,7 +70,7 @@ class ModelEvaluation:
     def initiate_model_evaluation(self) -> ModelEvaluationArtifact:
         try:
 
-            current_model_mean_auc_score = self.model_evaluating_similar_users()
+            current_model_mean_precision_at5 = self.model_evaluating_similar_users()
 
             #model_evaluation_path = self.model_eval_config.model_evaluation_dir
             #os.makedirs(os.path.dirname(model_evaluation_path),exist_ok=True)
@@ -86,8 +88,8 @@ class ModelEvaluation:
                     best_model_path=self.model_trainer_artifact.trained_interactions_model_file_path,
                     best_model_report_path=self.model_eval_config.report_file_path,
                     current_interactions_model_path=self.model_trainer_artifact.trained_interactions_model_file_path,
-                    current_interactions_model_report_file_path=self.model_eval_config.report_file_path,
-                    interactions_matrix_file_path = self.model_trainer_artifact.interactions_matrix_file_path
+                    interactions_matrix_shape_file_path = self.model_trainer_artifact.interactions_matrix_shape_file_path,
+                    current_interactions_model_report_file_path=self.model_eval_config.report_file_path,                    
                 )
                 return model_evaluation_artifact
 
@@ -96,10 +98,10 @@ class ModelEvaluation:
 
             best_model_report_path = model_resolver.get_best_model_report_path()
             best_model_report = read_json_file(best_model_report_path)
-            best_hit_rate = float(best_model_report["mean_accuracy_score"])
-            current_hit_rate = current_model_mean_auc_score
+            best_precision_at_k = float(best_model_report["mean_precision_at_5"])
+            current_precision_at_k = current_model_mean_precision_at5
 
-            improved_hitrate = abs(current_hit_rate - best_hit_rate)
+            improved_hitrate = abs(current_precision_at_k - best_precision_at_k)
             if improved_hitrate >= self.model_eval_config.change_threshold:
                 is_model_accepted=True   
             else:
@@ -111,8 +113,9 @@ class ModelEvaluation:
                 best_model_path = latest_model_path,
                 best_model_report_path = best_model_report_path,
                 current_interactions_model_path = self.model_trainer_artifact.trained_interactions_model_file_path,
-                current_interactions_model_report_file_path=self.model_eval_config.report_file_path,
-                interactions_matrix_file_path = self.model_trainer_artifact.interactions_matrix_file_path)
+                interactions_matrix_shape_file_path = self.model_trainer_artifact.interactions_matrix_shape_file_path,
+                current_interactions_model_report_file_path=self.model_eval_config.report_file_path
+                )
            
             return model_evaluation_artifact
         except Exception as e:

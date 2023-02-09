@@ -116,17 +116,17 @@ class TrainingPipeline:
             model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact, model_trainer_artifact)
             if not model_evaluation_artifact.is_model_accepted:
                 print("Process Completed Succesfully. Model Trained and Evaluated but the Trained model is not better than the best model. So, we do not push this model to Production. Exiting.")
-                #self.sync_artifact_dir_to_s3()
+                self.sync_artifact_dir_to_s3()
                 raise Exception("Model Not Pushed to Production")
             
             model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact)
-            #self.sync_artifact_dir_to_s3()
-            #self.sync_saved_model_dir_to_s3()
+            self.sync_artifact_dir_to_s3()
+            self.sync_saved_model_dir_to_s3()
 
             logging.info("Training Pipeline Running Operation Complete")
             logging.info(
                 "Exited the run_pipeline method of TrainPipeline class"
             )
         except Exception as e:
-            #self.sync_artifact_dir_to_s3()
+            self.sync_artifact_dir_to_s3()
             raise TrainException(e, sys)

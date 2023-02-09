@@ -12,7 +12,7 @@ from sklearn.metrics.pairwise import linear_kernel
 import numpy as np
 from src.entity.artifact_entity import DataIngestionArtifact,ModelTrainerArtifact
 from src.entity.config_entity import ModelTrainerConfig
-from src.utils.main_utils import save_object,save_numpy_array_data,save_npz_object
+from src.utils.main_utils import save_object,write_json_file,save_numpy_array_data,save_npz_object
 from scipy.sparse import coo_matrix
 from lightfm import LightFM
 from lightfm.evaluation import auc_score
@@ -47,13 +47,14 @@ class ModelTrainer:
                                    (interactions_train_data['user_id'], 
                                     interactions_train_data['course_id'])), 
                                     shape=(n_users,n_items))
-
+            
+            user_courses_number = {'n_users': str(n_users), 'n_items': str(n_items)}
             # model creation and training
             model = LightFM(no_components=10, loss='warp')
             model.fit(train_matrix['train'], epochs=100, num_threads=8)
 
             logging.info("Exiting the model_training_similar_users function of ModelTrainer class")
-            return model,train_matrix['train']
+            return model,user_courses_number
         except Exception as e:
             raise TrainException(e,sys)
     
@@ -63,24 +64,26 @@ class ModelTrainer:
             train_interactions_file_path = self.data_ingestion_artifact.trained_interactions_file_path
             
             logging.info("Training the similar users data")
-            model_interactions_train, interactions_data_csr = self.model_training_similar_users(train_interactions_file_path)
+            model_interactions_train, model_users_courses_number_file = self.model_training_similar_users(train_interactions_file_path)
             
             logging.info("Saving the similar users model")
             model_dir_path = os.path.dirname(self.model_trainer_config.trained_interactions_model_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
             save_object(self.model_trainer_config.trained_interactions_model_file_path,model_interactions_train)
 
-            logging.info("Saving the similar users matrix")
-            model_dir_path = os.path.dirname(self.model_trainer_config.interactions_matrix_file_path)
+            logging.info("Saving the number of users-courses json file")
+            model_dir_path = os.path.dirname(self.model_trainer_config.interactions_matrix_shape_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
-            save_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
+            write_json_file(self.model_trainer_config.interactions_matrix_shape_file_path, model_users_courses_number_file)
+            #save_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
             #save_npz_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
             #scipy.sparse.save_npz(model_dir_path, interactions_data_csr)
 
             #Model Trainer artifact
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_interactions_model_file_path=self.model_trainer_config.trained_interactions_model_file_path,
-                interactions_matrix_file_path = self.model_trainer_config.interactions_matrix_file_path)
+                interactions_matrix_shape_file_path = self.model_trainer_config.interactions_matrix_shape_file_path
+                )
 
             logging.info(f"Model trainer artifact: {model_trainer_artifact}")
             return model_trainer_artifact

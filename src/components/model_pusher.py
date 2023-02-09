@@ -24,32 +24,36 @@ class ModelPusher:
             best_interactions_model = self.model_eval_artifact.best_model_path
             best_interactions_model_report = self.model_eval_artifact.best_model_report_path
 
-            interactions_matrix = self.model_eval_artifact.interactions_matrix_file_path
+            interactions_matrix_shape_file = self.model_eval_artifact.interactions_matrix_shape_file_path
 
             #Pushing the trained interaction model and the courses model in the model pusher directory
             model_file_path = self.model_pusher_config.model_pusher_dir
             os.makedirs(os.path.dirname(model_file_path),exist_ok=True)
+            
             os.makedirs(os.path.dirname(self.model_pusher_config.best_interactions_model_file),exist_ok=True)
             shutil.copy(src=trained_interactions_model_path, dst=self.model_pusher_config.best_interactions_model_file)
+            
             os.makedirs(os.path.dirname(self.model_pusher_config.best_interactions_model_report_file),exist_ok=True)
             shutil.copy(src=current_interactions_model_report_path, dst=self.model_pusher_config.best_interactions_model_report_file)
 
             #Pushing the trained interaction model and the courses model in the saved for production directory
-            production_model_file_path = self.model_pusher_config.saved_production_model_file_path
-            os.makedirs(os.path.dirname(production_model_file_path),exist_ok=True)
+            #production_model_file_path = self.model_pusher_config.saved_production_model_file_path
+            #os.makedirs(os.path.dirname(production_model_file_path),exist_ok=True)
+            
             os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_interactions_model_file),exist_ok=True)
             shutil.copy(src=best_interactions_model, dst=self.model_pusher_config.saved_production_interactions_model_file)
+            
             os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_interactions_model_report_file),exist_ok=True)
             shutil.copy(src=best_interactions_model_report, dst=self.model_pusher_config.saved_production_interactions_model_report_file)
-            os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_interactions_matrix_file),exist_ok=True)
-            shutil.copy(src=interactions_matrix, dst=self.model_pusher_config.saved_production_interactions_matrix_file)
+            os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_interactions_matrix_shape_file),exist_ok=True)
+            shutil.copy(src=interactions_matrix_shape_file, dst=self.model_pusher_config.saved_production_interactions_matrix_shape_file)
 
 
             #Prepare artifact
-            model_pusher_artifact = ModelPusherArtifact(model_file_path=model_file_path, \
-                best_interactions_model_file=self.model_pusher_config.best_interactions_model_file, \
+            model_pusher_artifact = ModelPusherArtifact(model_file_path=model_file_path,
+                #best_interactions_model_file=self.model_pusher_config.best_interactions_model_file, \
                     saved_best_interactions_model_file=self.model_pusher_config.saved_production_interactions_model_file,\
-                        saved_interactions_matrix_file_path=self.model_pusher_config.saved_production_interactions_matrix_file
+                        saved_interactions_matrix_shape_file_path=self.model_pusher_config.saved_production_interactions_matrix_shape_file
                     )
             return model_pusher_artifact
 
