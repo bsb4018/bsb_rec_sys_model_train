@@ -33,6 +33,7 @@ class RecommenderConfig:
             data_ingestion_config = DataIngestionConfig(
                 data_ingestion_dir=data_ingestion_dir,
                 all_interactions_file_path=os.path.join(data_ingestion_dir,DATA_INGESTION_ALL_DATA_DIR),
+                all_users_file_path=os.path.join(data_ingestion_dir,DATA_INGESTION_USERS_ALL_FILE_NAME),
                 interactions_train_file_path=os.path.join(data_ingestion_dir,DATA_INGESTION_INTERACTIONS_TRAIN_FILE_NAME),
                 interactions_test_file_path=os.path.join(data_ingestion_dir,DATA_INGESTION_INTERACTIONS_TEST_FILE_NAME),
                 interactions_split_percentage=DATA_INGESTION_INTERACTIONS_SPLIT_PERCENTAGE

@@ -25,7 +25,8 @@ class DataIngestion:
             self.connection.download_feature_store_registries_s3()
         except Exception as e:
             raise TrainException(e,sys)
-
+        
+           
     def get_interaction_features_from_feature_store(self):
         try:
             logging.info("Into the get_interaction_features_from_feature_store function of DataIngestion class")
@@ -58,6 +59,42 @@ class DataIngestion:
         except Exception as e:
             logging.exception(e)
             raise TrainException(e,sys)
+        
+    def get_user_features_from_feature_store(self):
+        try:
+            logging.info("Into the get_interaction_features_from_feature_store function of DataIngestion class")
+            store = FeatureStore(repo_path="feature_repo")
+            #interaction_df = pd.read_parquet(path = "data-entity/data-interactions-entity.parquet")
+
+            user_entity_sql = f"""
+                SELECT user_feature_id,event_timestamp
+                FROM {store.get_data_source("rs_source_users").get_table_query_string()} 
+                WHERE event_timestamp BETWEEN '2019-01-01' and '2023-01-31'
+            """
+
+            logging.info("Getting Interactions Features from Feast")
+            #logging.info("Getting Features from Feast")
+            users_data = store.get_historical_features(entity_df = user_entity_sql, \
+            features = ["user_features:prev_web_dev","user_features:prev_data_sc","user_features:prev_data_an",\
+                        "user_features:prev_game_dev","user_features:prev_mob_dev","user_features:prev_program",\
+                            "user_features:prev_cloud","user_features:yrs_of_exp","user_features:no_certifications",\
+                                "user_features:user_id"]).to_df()
+            
+            logging.info("Forming the response")
+            response_data = users_data[["user_id","prev_web_dev","prev_data_sc","prev_data_an",\
+                        "prev_game_dev","prev_mob_dev","prev_program",\
+                            "prev_cloud","yrs_of_exp","no_certifications"]]
+                   
+            #response_data.sort_values(by=["user_id"])
+            #Save to the proper directory
+            dir_path = os.path.dirname(self.data_ingestion_config.all_users_file_path)
+            os.makedirs(dir_path, exist_ok=True)
+            response_data.to_parquet(self.data_ingestion_config.all_users_file_path, index=False)
+
+        except Exception as e:
+            logging.exception(e)
+            raise TrainException(e,sys)
+    
 
     def split_ingested_interaction_features_data(self):
         try:
@@ -68,8 +105,12 @@ class DataIngestion:
             interactions_train = interactions.iloc[0:split_point]
             interactions_valid = interactions.iloc[split_point::]
             #check that user_id and course_id already exist on the train data
-            interactions_valid = interactions_valid[(interactions_valid['user_id'].isin(interactions_valid['user_id'])) 
-                          & (interactions_valid['course_id'].isin(interactions_valid['course_id']))]
+            interactions_valid = interactions_valid[(interactions_valid['user_id'].isin(interactions_train['user_id'])) 
+                          & (interactions_valid['course_id'].isin(interactions_train['course_id']))]
+            
+            #split the train users features accordingly
+            #users = pd.read_parquet(self.data_ingestion_config.all_users_file_path)
+            #users = users[(users['user_id'].isin(interactions_train['user_id']))]
 
             #Save to the proper directory -> train
             dir_path = os.path.dirname(self.data_ingestion_config.interactions_train_file_path)
@@ -80,6 +121,7 @@ class DataIngestion:
             dir_path = os.path.dirname(self.data_ingestion_config.interactions_test_file_path)
             os.makedirs(dir_path, exist_ok=True)
             interactions_valid.to_parquet(self.data_ingestion_config.interactions_test_file_path, index=False)
+
         except Exception as e:
             raise TrainException(e,sys)
     
@@ -91,6 +133,8 @@ class DataIngestion:
 
             self.get_feature_registry_and_data_from_s3()
 
+            self.get_user_features_from_feature_store()
+
             self.get_interaction_features_from_feature_store()
             
             self.split_ingested_interaction_features_data()
@@ -99,6 +143,7 @@ class DataIngestion:
                 trained_interactions_file_path = self.data_ingestion_config.interactions_train_file_path,
                 test_interactions_file_path = self.data_ingestion_config.interactions_test_file_path,
                 interactions_all_data_file_path = self.data_ingestion_config.all_interactions_file_path,
+                users_all_data_file_path = self.data_ingestion_config.all_users_file_path
             )
 
             logging.info(f"Data ingestion artifact: {data_ingestion_artifact}")

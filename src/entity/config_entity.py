@@ -5,6 +5,7 @@ TrainingPipelineConfig = namedtuple("PipelineConfig",  ["pipeline_name", "artifa
 
 DataIngestionConfig = namedtuple("DataIngestionConfig",  ["data_ingestion_dir",
                                                          "all_interactions_file_path",
+                                                         "all_users_file_path",
                                                          "interactions_train_file_path",
                                                          "interactions_test_file_path",
                                                          "interactions_split_percentage",
