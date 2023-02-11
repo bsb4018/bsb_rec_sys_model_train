@@ -57,9 +57,13 @@ class RecommenderConfig:
             model_matrix_shape_file_name = os.path.join(
                 model_trainer_dir, MODEL_TRAINER_INTERACTIONS_MATRIX_SHAPE_FILE)
             
+            model_users_map_file_path = os.path.join(
+                model_trainer_dir, MODEL_TRAINER_USERS_MAP_FILE)
+            
             model_trainer_config = ModelTrainerConfig(model_trainer_dir=model_trainer_dir,
                                                       trained_interactions_model_file_path=trained_model_name,
                                                       interactions_matrix_shape_file_path=model_matrix_shape_file_name,
+                                                      model_users_map_file_path=model_users_map_file_path
                                                       )
                                                       
             logging.info(f"Model trainer config: {model_trainer_config}")
@@ -93,10 +97,12 @@ class RecommenderConfig:
                 best_interactions_model_file=os.path.join(model_pusher_dir,BEST_INTERACTIONS_MODEL_FILE_NAME),
                 best_interactions_model_report_file=os.path.join(model_pusher_dir,BEST_INTERACTIONS_MODEL_REPORT_FILE_NAME),
                 best_interactions_model_matrix_shape_file=os.path.join(model_pusher_dir,BEST_INTERACTIONS_MODEL_MATRIX_SHAPE_FILE_NAME),
+                best_users_map_file=os.path.join(model_pusher_dir,BEST_USERS_MAP_FILE_NAME),
                 #saved_production_model_file_path=os.path.join(self.saved_production_model_file_path,PRODUCTION_INTERACTIONS_MODEL_FILE_NAME),
                 saved_production_interactions_model_file=os.path.join(self.saved_production_model_file_path,PRODUCTION_INTERACTIONS_MODEL_FILE_NAME),
                 saved_production_interactions_model_report_file=os.path.join(self.saved_production_model_file_path,PRODUCTION_INTERACTIONS_MODEL_REPORT_FILE_NAME),
-                saved_production_interactions_matrix_shape_file=os.path.join(self.saved_production_model_file_path,PRODUCTION_INTERACTIONS_MATRIX_SHAPE_FILE_NAME)
+                saved_production_interactions_matrix_shape_file=os.path.join(self.saved_production_model_file_path,PRODUCTION_INTERACTIONS_MATRIX_SHAPE_FILE_NAME),
+                saved_model_users_map_file_path=os.path.join(self.saved_production_model_file_path,PRODUCTION_USERS_MAP_FILE_NAME)
             )
             logging.info(f"Model pusher config: {model_pusher_config}")
             return model_pusher_config

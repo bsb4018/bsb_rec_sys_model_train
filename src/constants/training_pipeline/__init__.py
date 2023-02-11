@@ -29,6 +29,7 @@ MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_INTERACTIONS_MODEL_NAME: str = "model_interactions.pkl"
 MODEL_TRAINER_INTERACTIONS_MATRIX_SHAPE_FILE: str = "model_matrix_shape.json"
+MODEL_TRAINER_USERS_MAP_FILE: str = "model_users_map.pkl"
 #MODEL_TRAINER_INTERACTIONS_MATRIX_FILE_NAME: str = "interactions_matrix.pkl"
 
 '''
@@ -46,6 +47,7 @@ MODEL_PUSHER_DIR_NAME = "model_pusher"
 BEST_INTERACTIONS_MODEL_FILE_NAME = "interactions_best.pkl"
 BEST_INTERACTIONS_MODEL_REPORT_FILE_NAME = "best_interactions_model_report.json"
 BEST_INTERACTIONS_MODEL_MATRIX_SHAPE_FILE_NAME = "best_interactions_model_matrix_shape.json"
+BEST_USERS_MAP_FILE_NAME = "best_users_map.pkl"
 MODEL_PUSHER_MODEL_NAME = "production_model_name"
 
 '''
@@ -55,3 +57,4 @@ SAVED_MODEL_DIR = os.path.join("saved_models")
 PRODUCTION_INTERACTIONS_MODEL_FILE_NAME = "production_interactions_model.pkl"
 PRODUCTION_INTERACTIONS_MODEL_REPORT_FILE_NAME = "production_interactions_model_report.json"
 PRODUCTION_INTERACTIONS_MATRIX_SHAPE_FILE_NAME = "production_interaction_matrix_shape.json"
+PRODUCTION_USERS_MAP_FILE_NAME = "production_users_map.pkl"

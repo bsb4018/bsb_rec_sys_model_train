@@ -133,7 +133,8 @@ class ModelEvaluation:
                     best_model_report_path=self.model_eval_config.report_file_path,
                     current_interactions_model_path=self.model_trainer_artifact.trained_interactions_model_file_path,
                     interactions_matrix_shape_file_path = self.model_trainer_artifact.interactions_matrix_shape_file_path,
-                    current_interactions_model_report_file_path=self.model_eval_config.report_file_path,                    
+                    current_interactions_model_report_file_path=self.model_eval_config.report_file_path,
+                    users_map_file_path=self.model_trainer_artifact.users_map_file_path                    
                 )
                 return model_evaluation_artifact
 
@@ -158,7 +159,8 @@ class ModelEvaluation:
                 best_model_report_path = best_model_report_path,
                 current_interactions_model_path = self.model_trainer_artifact.trained_interactions_model_file_path,
                 interactions_matrix_shape_file_path = self.model_trainer_artifact.interactions_matrix_shape_file_path,
-                current_interactions_model_report_file_path=self.model_eval_config.report_file_path
+                current_interactions_model_report_file_path=self.model_eval_config.report_file_path,
+                users_map_file_path=self.model_trainer_artifact.users_map_file_path
                 )
            
             return model_evaluation_artifact

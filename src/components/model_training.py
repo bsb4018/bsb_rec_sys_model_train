@@ -102,7 +102,7 @@ class ModelTrainer:
             #model = LightFM(no_components=10, loss='warp')
 
             logging.info("Exiting the model_training_similar_users function of ModelTrainer class")
-            return model,user_courses_number
+            return model,user_courses_number,user_feature_map
         except Exception as e:
             raise TrainException(e,sys)
         
@@ -149,7 +149,7 @@ class ModelTrainer:
             user_features_file_path = self.data_ingestion_artifact.users_all_data_file_path
             
             logging.info("Training the similar users data")
-            model_interactions_train, model_users_courses_number_file = self.model_training_similar_users(train_interactions_file_path,user_features_file_path)
+            model_interactions_train, model_users_courses_number_file, model_user_feature_map = self.model_training_similar_users(train_interactions_file_path,user_features_file_path)
             
             logging.info("Saving the similar users model")
             model_dir_path = os.path.dirname(self.model_trainer_config.trained_interactions_model_file_path)
@@ -160,6 +160,12 @@ class ModelTrainer:
             model_dir_path = os.path.dirname(self.model_trainer_config.interactions_matrix_shape_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
             write_json_file(self.model_trainer_config.interactions_matrix_shape_file_path, model_users_courses_number_file)
+
+            logging.info("Saving the users-map json file")
+            model_dir_path = os.path.dirname(self.model_trainer_config.model_users_map_file_path)
+            os.makedirs(model_dir_path,exist_ok=True)
+            save_object(self.model_trainer_config.model_users_map_file_path, model_user_feature_map)
+            
             #save_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
             #save_npz_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
             #scipy.sparse.save_npz(model_dir_path, interactions_data_csr)
@@ -167,7 +173,8 @@ class ModelTrainer:
             #Model Trainer artifact
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_interactions_model_file_path=self.model_trainer_config.trained_interactions_model_file_path,
-                interactions_matrix_shape_file_path = self.model_trainer_config.interactions_matrix_shape_file_path
+                interactions_matrix_shape_file_path = self.model_trainer_config.interactions_matrix_shape_file_path,
+                users_map_file_path = self.model_trainer_config.model_users_map_file_path
                 )
 
             logging.info(f"Model trainer artifact: {model_trainer_artifact}")

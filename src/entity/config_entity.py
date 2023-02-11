@@ -11,7 +11,7 @@ DataIngestionConfig = namedtuple("DataIngestionConfig",  ["data_ingestion_dir",
                                                          "interactions_split_percentage",
                                                         ])     
 
-ModelTrainerConfig = namedtuple("ModelTrainerConfig", ["model_trainer_dir", "trained_interactions_model_file_path", "interactions_matrix_shape_file_path",
+ModelTrainerConfig = namedtuple("ModelTrainerConfig", ["model_trainer_dir", "trained_interactions_model_file_path", "interactions_matrix_shape_file_path","model_users_map_file_path"
                                                        ])
 
 ModelEvaluationConfig = namedtuple("ModelEvaluationConfig",
@@ -22,8 +22,9 @@ ModelPusherConfig = namedtuple("ModelPusherConfig", ["model_pusher_dir",
                                                      "best_interactions_model_file",\
                                                         "best_interactions_model_report_file",\
                                                             "best_interactions_model_matrix_shape_file",\
-                                                            #"saved_production_model_file_path",\
+                                                              "best_users_map_file",\
                                                                 "saved_production_interactions_model_file",\
                                                                     "saved_production_interactions_model_report_file",\
-                                                                        "saved_production_interactions_matrix_shape_file"
+                                                                        "saved_production_interactions_matrix_shape_file",
+                                                                        "saved_model_users_map_file_path"
                                                                         ])

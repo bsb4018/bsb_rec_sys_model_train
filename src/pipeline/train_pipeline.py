@@ -128,5 +128,5 @@ class TrainingPipeline:
                 "Exited the run_pipeline method of TrainPipeline class"
             )
         except Exception as e:
-            self.sync_artifact_dir_to_s3()
+            #self.sync_artifact_dir_to_s3()
             raise TrainException(e, sys)
