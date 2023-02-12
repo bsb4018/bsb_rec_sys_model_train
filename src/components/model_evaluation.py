@@ -129,7 +129,7 @@ class ModelEvaluation:
                 model_evaluation_artifact = ModelEvaluationArtifact(
                     is_model_accepted=is_model_accepted,
                     improved_hitrate=None,
-                    best_model_path=self.model_trainer_artifact.trained_interactions_model_file_path,
+                    best_model_path=self.model_trainer_artifact.all_data_train_model_file_path,
                     best_model_report_path=self.model_eval_config.report_file_path,
                     current_interactions_model_path=self.model_trainer_artifact.trained_interactions_model_file_path,
                     interactions_matrix_shape_file_path = self.model_trainer_artifact.interactions_matrix_shape_file_path,
@@ -155,9 +155,9 @@ class ModelEvaluation:
             model_evaluation_artifact = ModelEvaluationArtifact(
                 is_model_accepted = is_model_accepted,
                 improved_hitrate = improved_hitrate,
-                best_model_path = latest_model_path,
+                best_model_path = self.model_trainer_artifact.all_data_train_model_file_path,
                 best_model_report_path = best_model_report_path,
-                current_interactions_model_path = self.model_trainer_artifact.trained_interactions_model_file_path,
+                current_interactions_model_path = self.model_trainer_artifact.all_data_train_model_file_path,
                 interactions_matrix_shape_file_path = self.model_trainer_artifact.interactions_matrix_shape_file_path,
                 current_interactions_model_report_file_path=self.model_eval_config.report_file_path,
                 users_map_file_path=self.model_trainer_artifact.users_map_file_path

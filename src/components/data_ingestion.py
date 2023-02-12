@@ -34,9 +34,9 @@ class DataIngestion:
             #interaction_df = pd.read_parquet(path = "data-entity/data-interactions-entity.parquet")
 
             interaction_entity_sql = f"""
-                SELECT interaction_id,event_timestamp 
+                SELECT event_timestamp,interaction_id
                 FROM {store.get_data_source("rs_source_interactions").get_table_query_string()}
-                WHERE event_timestamp BETWEEN '2019-01-01' and '2023-01-31'
+                WHERE event_timestamp BETWEEN '2019-01-01' and '2023-02-11'
             """
 
             logging.info("Getting Interactions Features from Feast")
@@ -47,10 +47,6 @@ class DataIngestion:
         
             logging.info("Forming the response")
             response_data = interaction_data[["user_id", "course_id", "event"]]
-            response_data["user_id"] = response_data["user_id"].astype('int64')
-            response_data["user_id"] = response_data["course_id"].astype('int64')
-            response_data["event"] = response_data["event"].astype('int64')
-            response_data.sort_values(by=["user_id"])
             #Save to the proper directory
             dir_path = os.path.dirname(self.data_ingestion_config.all_interactions_file_path)
             os.makedirs(dir_path, exist_ok=True)
@@ -67,9 +63,9 @@ class DataIngestion:
             #interaction_df = pd.read_parquet(path = "data-entity/data-interactions-entity.parquet")
 
             user_entity_sql = f"""
-                SELECT user_feature_id,event_timestamp
+                SELECT event_timestamp,user_feature_id
                 FROM {store.get_data_source("rs_source_users").get_table_query_string()} 
-                WHERE event_timestamp BETWEEN '2019-01-01' and '2023-01-31'
+                WHERE event_timestamp BETWEEN '2019-01-01' and '2023-02-11'
             """
 
             logging.info("Getting Interactions Features from Feast")
@@ -101,7 +97,7 @@ class DataIngestion:
             # split the data into train and test data
             interactions = pd.read_parquet(self.data_ingestion_config.all_interactions_file_path)
 
-            split_point = int(np.round(interactions.shape[0]*0.7))
+            split_point = int(np.round(interactions.shape[0]*0.8))
             interactions_train = interactions.iloc[0:split_point]
             interactions_valid = interactions.iloc[split_point::]
             #check that user_id and course_id already exist on the train data

@@ -11,7 +11,7 @@ DataIngestionConfig = namedtuple("DataIngestionConfig",  ["data_ingestion_dir",
                                                          "interactions_split_percentage",
                                                         ])     
 
-ModelTrainerConfig = namedtuple("ModelTrainerConfig", ["model_trainer_dir", "trained_interactions_model_file_path", "interactions_matrix_shape_file_path","model_users_map_file_path"
+ModelTrainerConfig = namedtuple("ModelTrainerConfig", ["model_trainer_dir", "trained_interactions_model_file_path", "interactions_matrix_shape_file_path","model_users_map_file_path","all_data_train_model_file_path"
                                                        ])
 
 ModelEvaluationConfig = namedtuple("ModelEvaluationConfig",

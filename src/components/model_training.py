@@ -34,7 +34,7 @@ class ModelTrainer:
         resultant output = ['f1:1', 'f2:1', 'f3:0', 'loc:del']
         """
         result = []
-        ll = ['user:', 'prev_web_dev:', 'prev_data_sc:', 'prev_data_an:', 'prev_game_dev:', 'prev_mob_dev:',\
+        ll = ['user_id:', 'prev_web_dev:', 'prev_data_sc:', 'prev_data_an:', 'prev_game_dev:', 'prev_mob_dev:',\
                         'prev_program:', 'prev_cloud:', 'yrs_of_exp:', 'no_certifications:']
         aa = my_list
         for x,y in zip(ll,aa):
@@ -43,18 +43,20 @@ class ModelTrainer:
         return result
            
 
-    def model_training_similar_users(self, train_interactions_file_path, users_all_data_file_path):
+    def model_training_similar_users(self, train_interactions_file_path, users_all_data_file_path, all_file=1):
         try:
             logging.info("Into the model_training_similar_users function of ModelTrainer class")
             #read interactions data
             interactionsdf = pd.read_parquet(train_interactions_file_path)
             #user_ids = interactionsdf.user_id.unique()
 
-            usersdf = pd.read_parquet(users_all_data_file_path)
-            users = usersdf[(usersdf['user_id'].isin(interactionsdf['user_id']))]
+            users = pd.read_parquet(users_all_data_file_path)
+
+            #if all_file == 0:
+            #    users = users[(users['user_id'].isin(interactionsdf['user_id']))]
 
             uf = []
-            col = ['user']*len(users.user_id.unique()) + ['prev_web_dev']*len(users.prev_web_dev.unique()) + ['prev_data_sc']*len(users.prev_data_sc.unique()) + ['prev_data_an']*len(users['prev_data_an'].unique()) \
+            col = ['user_id']*len(users.user_id.unique()) + ['prev_web_dev']*len(users.prev_web_dev.unique()) + ['prev_data_sc']*len(users.prev_data_sc.unique()) + ['prev_data_an']*len(users['prev_data_an'].unique()) \
                 + ['prev_game_dev']*len(users.prev_game_dev.unique()) + ['prev_mob_dev']*len(users.prev_mob_dev.unique()) + ['prev_program']*len(users.prev_program.unique()) + ['prev_cloud']*len(users.prev_cloud.unique()) \
                 + ['yrs_of_exp']*len(users.yrs_of_exp.unique()) + ['no_certifications']*len(users.no_certifications.unique())
 
@@ -102,7 +104,7 @@ class ModelTrainer:
             #model = LightFM(no_components=10, loss='warp')
 
             logging.info("Exiting the model_training_similar_users function of ModelTrainer class")
-            return model,user_courses_number,user_feature_map
+            return model,user_courses_number,user_id_map
         except Exception as e:
             raise TrainException(e,sys)
         
@@ -145,26 +147,36 @@ class ModelTrainer:
         try:
             logging.info("Into the initiate_model_trainer function of ModelTrainer class")
             train_interactions_file_path = self.data_ingestion_artifact.trained_interactions_file_path
+            all_interactions_file_path = self.data_ingestion_artifact.interactions_all_data_file_path
 
             user_features_file_path = self.data_ingestion_artifact.users_all_data_file_path
             
-            logging.info("Training the similar users data")
-            model_interactions_train, model_users_courses_number_file, model_user_feature_map = self.model_training_similar_users(train_interactions_file_path,user_features_file_path)
             
+
+            logging.info("Training the similar users data")
+            model_interactions_train, model_users_courses_number_file, model_user_feature_map = self.model_training_similar_users(train_interactions_file_path,user_features_file_path,all_file=0)
+            
+
+            model_interactions_all, model_users_courses_number_file_all, model_user_feature_map_all = self.model_training_similar_users(all_interactions_file_path,user_features_file_path,all_file=1)
             logging.info("Saving the similar users model")
             model_dir_path = os.path.dirname(self.model_trainer_config.trained_interactions_model_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
             save_object(self.model_trainer_config.trained_interactions_model_file_path,model_interactions_train)
 
+            logging.info("Saving the similar users model all data")
+            model_dir_path = os.path.dirname(self.model_trainer_config.all_data_train_model_file_path)
+            os.makedirs(model_dir_path,exist_ok=True)
+            save_object(self.model_trainer_config.all_data_train_model_file_path,model_interactions_all)
+
             logging.info("Saving the number of users-courses json file")
             model_dir_path = os.path.dirname(self.model_trainer_config.interactions_matrix_shape_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
-            write_json_file(self.model_trainer_config.interactions_matrix_shape_file_path, model_users_courses_number_file)
+            write_json_file(self.model_trainer_config.interactions_matrix_shape_file_path, model_users_courses_number_file_all)
 
             logging.info("Saving the users-map json file")
             model_dir_path = os.path.dirname(self.model_trainer_config.model_users_map_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
-            save_object(self.model_trainer_config.model_users_map_file_path, model_user_feature_map)
+            save_object(self.model_trainer_config.model_users_map_file_path, model_user_feature_map_all)
             
             #save_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
             #save_npz_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
@@ -174,7 +186,8 @@ class ModelTrainer:
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_interactions_model_file_path=self.model_trainer_config.trained_interactions_model_file_path,
                 interactions_matrix_shape_file_path = self.model_trainer_config.interactions_matrix_shape_file_path,
-                users_map_file_path = self.model_trainer_config.model_users_map_file_path
+                users_map_file_path = self.model_trainer_config.model_users_map_file_path,
+                all_data_train_model_file_path = self.model_trainer_config.all_data_train_model_file_path
                 )
 
             logging.info(f"Model trainer artifact: {model_trainer_artifact}")

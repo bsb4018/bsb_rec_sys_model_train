@@ -14,7 +14,7 @@ Data Ingestion related constant start with DATA_INGESTION VAR NAME
 '''
 
 DATA_INGESTION_DIR_NAME: str = "data_ingestion"
-DATA_INGESTION_ALL_DATA_DIR: str = "all_data"
+DATA_INGESTION_ALL_DATA_DIR: str = "all_data.parquet"
 DATA_INGESTION_SPLIT_DATA_DIR: str = "splitted_data"
 DATA_INGESTION_INTERACTIONS_FILE_NAME: str = "interactions.parquet"
 DATA_INGESTION_USERS_ALL_FILE_NAME: str = "users_data.parquet"
@@ -27,9 +27,10 @@ MODEL TRAINER related constant start with MODEL_TRAINER var name
 '''
 MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
-MODEL_TRAINER_TRAINED_INTERACTIONS_MODEL_NAME: str = "model_interactions.pkl"
+MODEL_TRAINER_TRAINED_INTERACTIONS_MODEL_NAME: str = "model_interactions_train.pkl"
 MODEL_TRAINER_INTERACTIONS_MATRIX_SHAPE_FILE: str = "model_matrix_shape.json"
 MODEL_TRAINER_USERS_MAP_FILE: str = "model_users_map.pkl"
+MODEL_TRAINER_ALL_DATA_FILE: str = "model_interactions.pkl"
 #MODEL_TRAINER_INTERACTIONS_MATRIX_FILE_NAME: str = "interactions_matrix.pkl"
 
 '''
