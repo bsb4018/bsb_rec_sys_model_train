@@ -26,7 +26,8 @@ class ModelPusher:
 
             interactions_matrix_shape_file = self.model_eval_artifact.interactions_matrix_shape_file_path
 
-            users_map_file = self.model_eval_artifact.users_map_file_path
+            users_id_map_file = self.model_eval_artifact.users_id_map_file_path
+            users_feature_map_file = self.model_eval_artifact.users_feature_map_file_path
 
             #Pushing the trained interaction model and the courses model in the model pusher directory
             model_file_path = self.model_pusher_config.model_pusher_dir
@@ -41,8 +42,11 @@ class ModelPusher:
             os.makedirs(os.path.dirname(self.model_pusher_config.best_interactions_model_matrix_shape_file),exist_ok=True)
             shutil.copy(src=interactions_matrix_shape_file, dst=self.model_pusher_config.best_interactions_model_matrix_shape_file)
 
-            os.makedirs(os.path.dirname(self.model_pusher_config.best_users_map_file),exist_ok=True)
-            shutil.copy(src=users_map_file, dst=self.model_pusher_config.best_users_map_file)
+            os.makedirs(os.path.dirname(self.model_pusher_config.best_users_id_map_file),exist_ok=True)
+            shutil.copy(src=users_id_map_file, dst=self.model_pusher_config.best_users_id_map_file)
+
+            os.makedirs(os.path.dirname(self.model_pusher_config.best_users_feature_map_file),exist_ok=True)
+            shutil.copy(src=users_feature_map_file, dst=self.model_pusher_config.best_users_feature_map_file)
 
 
             #Pushing the trained interaction model and the courses model in the saved for production directory
@@ -56,15 +60,18 @@ class ModelPusher:
             shutil.copy(src=best_interactions_model_report, dst=self.model_pusher_config.saved_production_interactions_model_report_file)
             os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_interactions_matrix_shape_file),exist_ok=True)
             shutil.copy(src=interactions_matrix_shape_file, dst=self.model_pusher_config.saved_production_interactions_matrix_shape_file)
-            os.makedirs(os.path.dirname(self.model_pusher_config.saved_model_users_map_file_path),exist_ok=True)
-            shutil.copy(src=users_map_file, dst=self.model_pusher_config.saved_model_users_map_file_path)
+            
+            os.makedirs(os.path.dirname(self.model_pusher_config.saved_model_users_id_map_file_path),exist_ok=True)
+            shutil.copy(src=users_id_map_file, dst=self.model_pusher_config.saved_model_users_id_map_file_path)
+            os.makedirs(os.path.dirname(self.model_pusher_config.saved_model_users_feature_map_file_path),exist_ok=True)
+            shutil.copy(src=users_feature_map_file, dst=self.model_pusher_config.saved_model_users_feature_map_file_path)
 
             #Prepare artifact
-            model_pusher_artifact = ModelPusherArtifact(model_file_path=model_file_path,
-                #best_interactions_model_file=self.model_pusher_config.best_interactions_model_file, \
+            model_pusher_artifact = ModelPusherArtifact(model_file_path=model_file_path,\
                     saved_best_interactions_model_file=self.model_pusher_config.saved_production_interactions_model_file,\
                         saved_interactions_matrix_shape_file_path=self.model_pusher_config.saved_production_interactions_matrix_shape_file,\
-                        saved_users_map_file_path=self.model_pusher_config.saved_model_users_map_file_path
+                        saved_users_id_map_file_path=self.model_pusher_config.saved_model_users_id_map_file_path,\
+                        saved_users_feature_map_file_path=self.model_pusher_config.saved_model_users_feature_map_file_path
                     )
             return model_pusher_artifact
 

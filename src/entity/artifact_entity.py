@@ -14,7 +14,8 @@ class DataIngestionArtifact:
 class ModelTrainerArtifact:
     trained_interactions_model_file_path: str
     interactions_matrix_shape_file_path: str
-    users_map_file_path: str
+    users_id_map_file_path: str
+    users_feature_map_file_path: str
     all_data_train_model_file_path: str
 
 @dataclass
@@ -26,7 +27,8 @@ class ModelEvaluationArtifact:
     current_interactions_model_path: str
     interactions_matrix_shape_file_path: str
     current_interactions_model_report_file_path: str
-    users_map_file_path: str
+    users_id_map_file_path: str
+    users_feature_map_file_path: str
     
 @dataclass
 class ModelPusherArtifact:
@@ -34,6 +36,7 @@ class ModelPusherArtifact:
     #best_interactions_model_file:str
     saved_best_interactions_model_file:str
     saved_interactions_matrix_shape_file_path:str
-    saved_users_map_file_path:str
+    saved_users_id_map_file_path:str
+    saved_users_feature_map_file_path:str
 
     

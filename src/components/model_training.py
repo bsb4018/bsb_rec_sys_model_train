@@ -104,7 +104,7 @@ class ModelTrainer:
             #model = LightFM(no_components=10, loss='warp')
 
             logging.info("Exiting the model_training_similar_users function of ModelTrainer class")
-            return model,user_courses_number,user_id_map
+            return model,user_courses_number,user_id_map,user_feature_map
         except Exception as e:
             raise TrainException(e,sys)
         
@@ -154,10 +154,10 @@ class ModelTrainer:
             
 
             logging.info("Training the similar users data")
-            model_interactions_train, model_users_courses_number_file, model_user_feature_map = self.model_training_similar_users(train_interactions_file_path,user_features_file_path,all_file=0)
+            model_interactions_train, model_users_courses_number_file, model_user_id_map, model_user_feature_map = self.model_training_similar_users(train_interactions_file_path,user_features_file_path,all_file=0)
             
 
-            model_interactions_all, model_users_courses_number_file_all, model_user_feature_map_all = self.model_training_similar_users(all_interactions_file_path,user_features_file_path,all_file=1)
+            model_interactions_all, model_users_courses_number_file_all, model_user_id_map_all, model_user_feature_map_all = self.model_training_similar_users(all_interactions_file_path,user_features_file_path,all_file=1)
             logging.info("Saving the similar users model")
             model_dir_path = os.path.dirname(self.model_trainer_config.trained_interactions_model_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
@@ -173,10 +173,15 @@ class ModelTrainer:
             os.makedirs(model_dir_path,exist_ok=True)
             write_json_file(self.model_trainer_config.interactions_matrix_shape_file_path, model_users_courses_number_file_all)
 
-            logging.info("Saving the users-map json file")
-            model_dir_path = os.path.dirname(self.model_trainer_config.model_users_map_file_path)
+            logging.info("Saving the users-id-map json file")
+            model_dir_path = os.path.dirname(self.model_trainer_config.model_users_id_map_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
-            save_object(self.model_trainer_config.model_users_map_file_path, model_user_feature_map_all)
+            save_object(self.model_trainer_config.model_users_id_map_file_path, model_user_id_map_all)
+
+            logging.info("Saving the users-feature-map json file")
+            model_dir_path = os.path.dirname(self.model_trainer_config.model_users_feature_map_file_path)
+            os.makedirs(model_dir_path,exist_ok=True)
+            save_object(self.model_trainer_config.model_users_feature_map_file_path, model_user_feature_map_all)
             
             #save_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
             #save_npz_object(self.model_trainer_config.interactions_matrix_file_path, interactions_data_csr)
@@ -186,7 +191,8 @@ class ModelTrainer:
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_interactions_model_file_path=self.model_trainer_config.trained_interactions_model_file_path,
                 interactions_matrix_shape_file_path = self.model_trainer_config.interactions_matrix_shape_file_path,
-                users_map_file_path = self.model_trainer_config.model_users_map_file_path,
+                users_id_map_file_path = self.model_trainer_config.model_users_id_map_file_path,
+                users_feature_map_file_path = self.model_trainer_config.model_users_feature_map_file_path,
                 all_data_train_model_file_path = self.model_trainer_config.all_data_train_model_file_path
                 )
 
