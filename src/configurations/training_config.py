@@ -63,15 +63,15 @@ class RecommenderConfig:
             model_users_feature_map_file_path = os.path.join(
                 model_trainer_dir, MODEL_TRAINER_USERS_FEATURE_MAP_FILE)
             
-            all_data_train_model_file_path = os.path.join(
-                model_trainer_dir, MODEL_TRAINER_ALL_DATA_FILE)
+            #all_data_train_model_file_path = os.path.join(
+            #    model_trainer_dir, MODEL_TRAINER_ALL_DATA_FILE)
             
             model_trainer_config = ModelTrainerConfig(model_trainer_dir=model_trainer_dir,
                                                       trained_interactions_model_file_path=trained_model_name,
                                                       interactions_matrix_shape_file_path=model_matrix_shape_file_name,
                                                       model_users_id_map_file_path=model_users_id_map_file_path,
                                                       model_users_feature_map_file_path=model_users_feature_map_file_path,
-                                                      all_data_train_model_file_path = all_data_train_model_file_path
+                                                      #all_data_train_model_file_path = all_data_train_model_file_path
                                                       )
                                                       
             logging.info(f"Model trainer config: {model_trainer_config}")

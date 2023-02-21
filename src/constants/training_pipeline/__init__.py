@@ -31,7 +31,7 @@ MODEL_TRAINER_TRAINED_INTERACTIONS_MODEL_NAME: str = "model_interactions_train.p
 MODEL_TRAINER_INTERACTIONS_MATRIX_SHAPE_FILE: str = "model_matrix_shape.json"
 MODEL_TRAINER_USERS_ID_MAP_FILE: str = "model_users_id_map.pkl"
 MODEL_TRAINER_USERS_FEATURE_MAP_FILE: str = "model_users_feature_map.pkl"
-MODEL_TRAINER_ALL_DATA_FILE: str = "model_interactions.pkl"
+#MODEL_TRAINER_ALL_DATA_FILE: str = "model_interactions.pkl"
 #MODEL_TRAINER_INTERACTIONS_MATRIX_FILE_NAME: str = "interactions_matrix.pkl"
 
 '''

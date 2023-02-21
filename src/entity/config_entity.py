@@ -16,7 +16,7 @@ ModelTrainerConfig = namedtuple("ModelTrainerConfig", ["model_trainer_dir", \
                                                         "interactions_matrix_shape_file_path",\
                                                           "model_users_id_map_file_path",\
                                                             "model_users_feature_map_file_path",
-                                                            "all_data_train_model_file_path"
+                                                            #"all_data_train_model_file_path"
                                                        ])
 
 ModelEvaluationConfig = namedtuple("ModelEvaluationConfig",

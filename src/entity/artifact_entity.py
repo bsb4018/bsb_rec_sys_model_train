@@ -16,7 +16,7 @@ class ModelTrainerArtifact:
     interactions_matrix_shape_file_path: str
     users_id_map_file_path: str
     users_feature_map_file_path: str
-    all_data_train_model_file_path: str
+    #all_data_train_model_file_path: str
 
 @dataclass
 class ModelEvaluationArtifact:
