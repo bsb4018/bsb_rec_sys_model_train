@@ -81,7 +81,7 @@ class ModelTrainer:
                 )
             logging.info("MODEL TRAINER:LightFM Skeleton Dataset Format Created")
 
-            logging.info("MODEL TRAINER:LightFM Building Event-Interactions Sparse Matrices")
+            logging.info("MODEL TRAINER:LightFM Building Train Event-Interactions Sparse Matrices")
             # plugging in the interactions data to build the sparse matrix
             (interactions, weights) = dataset1.build_interactions([(x[0], x[1], x[2]) for x in interactionsdf.values])
             logging.info("MODEL TRAINER:LightFM Event-Interactions Sparse Matrices Built")
