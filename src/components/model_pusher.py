@@ -10,8 +10,11 @@ class ModelPusher:
     def __init__(self, model_pusher_config: ModelPusherConfig,
                        model_eval_artifact: ModelEvaluationArtifact):
         try:
+            logging.info("MODEL PUSHER:Getting Model Pusher Configurations")
             self.model_pusher_config = model_pusher_config
             self.model_eval_artifact = model_eval_artifact
+
+            logging.info("MODEL PUSHER:Model Pusher Configured") 
         except Exception as e:
             raise TrainException(e,sys)
 
@@ -21,11 +24,12 @@ class ModelPusher:
             trained_interactions_model_path = self.model_eval_artifact.current_interactions_model_path
             current_interactions_model_report_path = self.model_eval_artifact.current_interactions_model_report_file_path
 
+            #Loading best model file and model report file
             best_interactions_model = self.model_eval_artifact.best_model_path
             best_interactions_model_report = self.model_eval_artifact.best_model_report_path
-
             interactions_matrix_shape_file = self.model_eval_artifact.interactions_matrix_shape_file_path
 
+            #Loading best model file user-feature and user-id map files
             users_id_map_file = self.model_eval_artifact.users_id_map_file_path
             users_feature_map_file = self.model_eval_artifact.users_feature_map_file_path
 
@@ -50,9 +54,6 @@ class ModelPusher:
 
 
             #Pushing the trained interaction model and the courses model in the saved for production directory
-            #production_model_file_path = self.model_pusher_config.saved_production_model_file_path
-            #os.makedirs(os.path.dirname(production_model_file_path),exist_ok=True)
-            
             os.makedirs(os.path.dirname(self.model_pusher_config.saved_production_interactions_model_file),exist_ok=True)
             shutil.copy(src=best_interactions_model, dst=self.model_pusher_config.saved_production_interactions_model_file)
             
@@ -73,6 +74,8 @@ class ModelPusher:
                         saved_users_id_map_file_path=self.model_pusher_config.saved_model_users_id_map_file_path,\
                         saved_users_feature_map_file_path=self.model_pusher_config.saved_model_users_feature_map_file_path
                     )
+            
+            logging.info(f"MODEL PUSHER Successful")
             return model_pusher_artifact
 
         except Exception as e:

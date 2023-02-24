@@ -6,6 +6,9 @@ from boto3 import Session
 import os
 
 class AwsStorage:
+    """
+    Get AWS credentials
+    """
     def __init__(self):
         self.ACCESS_KEY_ID = os.getenv(AWS_ACCESS_KEY_ID)
         self.SECRET_KEY = os.getenv(AWS_SECRET_ACCESS_KEY)
@@ -14,7 +17,6 @@ class AwsStorage:
 
     def get_aws_storage_config(self):
         return self.__dict__
-
 
 class StorageConnection:
     """

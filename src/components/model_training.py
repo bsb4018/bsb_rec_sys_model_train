@@ -59,15 +59,15 @@ class ModelTrainer:
             #Formatting User Features in the form of [feature_name_1:value_1, feature_name_1:value_2,..., feature_name_n:value_n]
             #This is how lightfm expects the user features for fitting in the skeleton dataset
             user_features = []
-            col = ['user_id']*len(users.user_id.unique()) + ['prev_web_dev']*len(users.prev_web_dev.unique()) + ['prev_data_sc']*len(users.prev_data_sc.unique()) + ['prev_data_an']*len(users['prev_data_an'].unique()) \
+            columns = ['user_id']*len(users.user_id.unique()) + ['prev_web_dev']*len(users.prev_web_dev.unique()) + ['prev_data_sc']*len(users.prev_data_sc.unique()) + ['prev_data_an']*len(users['prev_data_an'].unique()) \
                 + ['prev_game_dev']*len(users.prev_game_dev.unique()) + ['prev_mob_dev']*len(users.prev_mob_dev.unique()) + ['prev_program']*len(users.prev_program.unique()) + ['prev_cloud']*len(users.prev_cloud.unique()) \
                 + ['yrs_of_exp']*len(users.yrs_of_exp.unique()) + ['no_certifications']*len(users.no_certifications.unique())
 
-            unique_f1 = list(users.user_id.unique()) + list(users.prev_web_dev.unique()) + list(users.prev_data_sc.unique()) + list(users.prev_data_an.unique()) \
+            unique_features_list = list(users.user_id.unique()) + list(users.prev_web_dev.unique()) + list(users.prev_data_sc.unique()) + list(users.prev_data_an.unique()) \
                 + list(users.prev_game_dev.unique()) + list(users.prev_mob_dev.unique()) + list(users.prev_program.unique()) + list(users.prev_cloud.unique()) \
                 + list(users.yrs_of_exp.unique()) + list(users.no_certifications.unique())
 
-            for x,y in zip(col, unique_f1):
+            for x,y in zip(columns, unique_features_list):
                 res = str(x)+ ":" +str(y)
                 user_features.append(res)
             

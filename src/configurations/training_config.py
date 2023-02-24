@@ -22,12 +22,11 @@ class RecommenderConfig:
             raise TrainException(e, sys)
 
     def get_data_ingestion_config(self) -> DataIngestionConfig:
+        """
+            Get the configurations for data ingestion
+        """
         try:
-            """
-            master directory for data ingestion
-            we will store metadata information and ingested file to avoid redundant download
-            """
-
+            logging.info("Getting Data ingestion config")
             data_ingestion_dir = os.path.join(self.pipeline_config.artifact_dir,DATA_INGESTION_DIR_NAME)
         
             data_ingestion_config = DataIngestionConfig(
@@ -46,7 +45,11 @@ class RecommenderConfig:
 
 
     def get_model_trainer_config(self) -> ModelTrainerConfig:
+        """
+            Get the configurations for model trainer
+        """
         try:
+            logging.info("Getting Model Trainer config")
             model_trainer_dir = os.path.join(self.pipeline_config.artifact_dir,MODEL_TRAINER_DIR_NAME)
             trained_model_file_path = os.path.join(
                 model_trainer_dir, MODEL_TRAINER_TRAINED_MODEL_DIR)
@@ -80,7 +83,11 @@ class RecommenderConfig:
             raise TrainException(e, sys)
 
     def get_model_evaluation_config(self) -> ModelEvaluationConfig:
+        """
+            Get the configurations for model evaluation
+        """
         try:
+            logging.info("Getting Model Evaluation config")
             model_evaluation_dir = os.path.join(self.pipeline_config.artifact_dir,MODEL_EVALUATION_DIR_NAME)
 
             model_evaluation_report_file_path = os.path.join(
@@ -97,7 +104,11 @@ class RecommenderConfig:
             raise TrainException(e, sys)
 
     def get_model_pusher_config(self) -> ModelPusherConfig:
+        """
+            Get the configurations for model pusher
+        """
         try:
+            logging.info("Getting Model Pusher config")
             model_pusher_dir = os.path.join(self.pipeline_config.artifact_dir,MODEL_PUSHER_DIR_NAME)
             self.saved_production_model_file_path = os.path.join(SAVED_MODEL_DIR,f"{self.timestamp}")
             model_pusher_config = ModelPusherConfig(

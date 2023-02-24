@@ -10,6 +10,7 @@ class ModelResolver:
             raise e
 
     def get_best_model_path(self,) -> str:
+        '''Returns the best model path'''
         try:
             timestamps = list(map(int, os.listdir(self.model_dir)))
             latest_timestamp = max(timestamps)
@@ -20,6 +21,7 @@ class ModelResolver:
             raise e
 
     def is_model_exists(self) -> bool:
+        '''Check if a model exists in the list of best models'''
         try:
             if not os.path.exists(self.model_dir):
                 return False
@@ -38,6 +40,7 @@ class ModelResolver:
             raise e
     
     def get_best_model_report_path(self,) -> str:
+        '''Returns the best model evaluation report file'''
         try:
             timestamps = list(map(int, os.listdir(self.model_dir)))
             latest_timestamp = max(timestamps)
