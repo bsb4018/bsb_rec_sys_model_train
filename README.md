@@ -1,10 +1,15 @@
 # Course Recommender System - Model Training and Evaluation
 
 ### Problem Statement
-
+Course Recommender System for recommending courses to users in a education-website platform
+Users Get Recommended in three ways
+1. By Interest Tag -> Users enters interest topic tags and get recommendations based on that
+2. By Similar Users -> Existing Users enter user id and get recommendations based on similar interactions of other users with the platform 
+3. By User's Previous Experiences -> New Users who have not interacted with the platform get recommendations based on past experiences during onboarding
 
 ### Solution Proposed 
-The solution creates a feature store using feast utilizing AWS Infrastructure
+For 1. We use MongoDB to store our courses topic tagwise and recommend random courses based on the interests
+For 2 and 3. We train a hybrid recommender System on user-course interaction features and user features using LightFM framework
 
 ## Tech Stack Used
 1. Python 
@@ -12,24 +17,29 @@ The solution creates a feature store using feast utilizing AWS Infrastructure
 3. AWS
 4. Docker
 5. MongoDB
+6. Apache Airflow
+7. Graphana and Prometheus
+
 
 ## Infrastructure Required.
-
 1. AWS S3
-2. Terraform
+2. AWS Redshift
+3. AWS Glue
+4. AWS Dynamo DB
+5. Git Actions
 
 
 ## How to run?
-Before we run the project, make sure that you are having MongoDB in your local system, with Compass since we are using MongoDB for some data storage. You also need AWS account to access the S3 service.
+Before we run the project, make sure that you are having MongoDB in your local system, with Compass since we are using MongoDB for some data storage. You also need AWS account to access S3, Redshift, Glue, DynamoDB Services. You also need to have terraform installed and configured. Also need to have installed Apache Airflow.
 
 
 ## Project Architecture
-![image](https://user-images.githubusercontent.com/57321948/193536768-ae704adc-32d9-4c6c-b234-79c152f756c5.png)
+![image]()
 
 
 ### Step 1: Clone the repository
 ```bash
-git clone https://github.com/sethusaim/Sensor-Fault-Detection.git
+git clone https://github.com/bsb4018/bsb_rec_sys_mti.git
 ```
 
 ### Step 2- Create a conda environment after opening the repository
@@ -47,29 +57,22 @@ conda activate venv/
 pip install -r requirements.txt
 ```
 
-### Step 4 - Create AWS Account and do the following get the following ids
+### Step 4 - Get AWS credentials
 ```bash
-Create three S3 bucket with unique names 
-Replace the names accordingly in src/constants/cloud_constants.py 
+Get the Feature Repo Bucket Name from Data Store https://github.com/bsb4018/bsb_rec_sys_data_store.git 
+Goto src/constants/cloud_constants.py and replace the name S3_FEATURE_REGISTRY_BUCKET_NAME accordingly
 
-Create another S3 bucket with with name bsb-4018-rec-sys-app-proj-<any-unique-key>
-Goto infra/main.tf and replace the name under "aws_s3_bucket_acl" resource
-Create a database name dev under AWS GLUE CATALOG
+Create a S3 bucket to export the model and artifacts
+Goto src/constants/cloud_constants.py and replace the name S3_TRAINING_BUCKET_NAME accordingly
+
 Get a note of the following
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 AWS_REGION_NAME
 ```
 
-### Step 5 - Create Mongo DB Atlas Cluster and Create the following 
-```bash
-Database with name "recsysdb"
-collection with name "courses_tagwise"         
-collection with name "course_name_id"
-Get the MONGODB_URL
-```
 
-### Step 4 - Export the environment variable
+### Step 5 - Export the environment variable
 ```bash
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
 
@@ -77,18 +80,13 @@ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 
 export AWS_REGION_NAME=<AWS_REGION_NAME>
 
-export MONGODB_URL="mongodb+srv://<username>:<password>@cluster.7eh1w4s.mongodb.net/?retryWrites=true&w=majority"
 ```
 
 
-### Step 5 - Start locally
+### Step 5 - Run locally
 ```bash
-/bin/bash -c ./start.sh
+python main.py
 ```
-
-### Step 6. Stop locally
-```bash
-/bin/bash -c ./stop.sh
 
 
 ## Runing Through Docker
@@ -103,5 +101,5 @@ docker build --build-arg AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID> --build-arg AWS_S
 
 3. Run the Docker image
 ```
-docker run -d -p 8090:8090 <IMAGE_NAME>
+docker run -d -p 8070:8070 <IMAGE_NAME>
 ```
