@@ -25,8 +25,7 @@ For 2 and 3. We train a hybrid recommender System on user-course interaction fea
 1. AWS S3
 2. AWS Redshift
 3. AWS Glue
-4. AWS Dynamo DB
-5. Git Actions
+4. Git Actions
 
 
 ## How to run?
