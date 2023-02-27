@@ -34,7 +34,7 @@ Before we run the project, make sure that you are having MongoDB in your local s
 
 
 ## Project Architecture
-![image]()
+![image](https://github.com/bsb4018/bsb_rec_sys_mti/blob/main/images/modelTrainLLD_whole.drawio.png)
 
 
 ### Step 1: Clone the repository
