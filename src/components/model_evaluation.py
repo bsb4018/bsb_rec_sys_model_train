@@ -107,19 +107,19 @@ class ModelEvaluation:
             # model creation and training
             mean_auc_score = auc_score(model, interactions, user_features=user_features).mean()
             
-            logging.info("MODEL EVALUATION:Evaluating mean precision @10 score")
-            mean_precision_at_10 = precision_at_k(model,
+            logging.info("MODEL EVALUATION:Evaluating mean precision @4 score")
+            mean_precision_at_4 = precision_at_k(model,
                       interactions,
                       user_features=user_features,
-                      k=10
+                      k=4
                      ).mean()
 
             #create a dictionary of the merrics and save it
-            evaluation_report = {'mean_accuracy_score': str(mean_auc_score), 'mean_precision_at_10': str(mean_precision_at_10)}
+            evaluation_report = {'mean_accuracy_score': str(mean_auc_score), 'mean_precision_at_10': str(mean_precision_at_4)}
             write_json_file(self.model_eval_config.report_file_path, evaluation_report)
             
             logging.info("Exiting the model_evaluating_similar_users function of ModelEvaluation class")
-            return mean_precision_at_10
+            return mean_precision_at_4
     
         except Exception as e:
             raise TrainException(e,sys)
@@ -127,7 +127,7 @@ class ModelEvaluation:
     def initiate_model_evaluation(self) -> ModelEvaluationArtifact:
         try:
             logging.info("MODEL EVALUATION:Into the initiate_model_evaluation function of ModelEvaluation class")
-            current_model_mean_precision_at10 = self.model_evaluating_similar_users()
+            current_model_mean_precision_at4 = self.model_evaluating_similar_users()
 
             #model_evaluation_path = self.model_eval_config.model_evaluation_dir
             #os.makedirs(os.path.dirname(model_evaluation_path),exist_ok=True)
@@ -158,8 +158,8 @@ class ModelEvaluation:
 
             best_model_report_path = model_resolver.get_best_model_report_path()
             best_model_report = read_json_file(best_model_report_path)
-            best_precision_at_k = float(best_model_report["mean_precision_at_10"])
-            current_precision_at_k = current_model_mean_precision_at10
+            best_precision_at_k = float(best_model_report["mean_precision_at_4"])
+            current_precision_at_k = current_model_mean_precision_at4
            
             improved_hitrate = abs(current_precision_at_k - best_precision_at_k)
             if improved_hitrate >= self.model_eval_config.change_threshold:
