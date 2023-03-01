@@ -1,5 +1,6 @@
 import sys
 import os
+from memory_profiler import profile
 from src.components.data_ingestion import DataIngestion
 from src.components.model_training import ModelTrainer
 from src.components.model_evaluation import ModelEvaluation
@@ -17,6 +18,7 @@ class TrainingPipeline:
         self.artifact_dir = self.training_pipeline_config.pipeline_config.artifact_dir
         self.s3_sync = S3Sync()
 
+    @profile
     def start_data_ingestion(self) -> DataIngestionArtifact:
         try:
             logging.info(
@@ -37,7 +39,8 @@ class TrainingPipeline:
     
         except Exception as e:
             raise TrainException(e, sys)
-
+    
+    @profile
     def start_model_trainer(self,data_ingestion_artifact:DataIngestionArtifact) -> ModelTrainerArtifact:
         try:
             logging.info("Entered the start_model_trainer method of TrainingPipeline class")
@@ -56,6 +59,7 @@ class TrainingPipeline:
         except  Exception as e:
             raise  TrainException(e,sys)
 
+    @profile
     def start_model_evaluation(self,data_ingestion_artifact:DataIngestionArtifact,
                                  model_trainer_artifact:ModelTrainerArtifact
                                 ) -> ModelEvaluationArtifact:
@@ -72,7 +76,8 @@ class TrainingPipeline:
             return model_eval_artifact
         except  Exception as e:
             raise  TrainException(e,sys)
-
+    
+    @profile
     def start_model_pusher(self,model_eval_artifact:ModelEvaluationArtifact) -> ModelPusherArtifact:
         try:
             logging.info("Entered the start_model_pusher method of TrainingPipeline class")
@@ -89,6 +94,7 @@ class TrainingPipeline:
         except  Exception as e:
             raise TrainException(e,sys)
     
+    @profile
     def sync_artifact_dir_to_s3(self):
         try:
             logging.info("Entered the sync_artifact_dir_to_s3 method of TrainingPipeline class")
@@ -98,7 +104,8 @@ class TrainingPipeline:
 
         except Exception as e:
             raise TrainException(e,sys)
-
+    
+    @profile
     def sync_saved_model_dir_to_s3(self):
         try:
             logging.info("Entered the sync_saved_model_dir_to_s3 method of TrainingPipeline class")
@@ -107,7 +114,8 @@ class TrainingPipeline:
             logging.info("Performed Syncing of saved models to S3 bucket")
         except Exception as e:
             raise TrainException(e,sys)
-
+    
+    @profile
     def run_pipeline(self,) -> None:
         try:
             logging.info("Entered the run_pipeline method of TrainingPipeline class")

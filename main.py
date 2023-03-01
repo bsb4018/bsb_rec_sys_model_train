@@ -1,8 +1,10 @@
+from memory_profiler import profile
 from src.pipeline.train_pipeline import TrainingPipeline
 import logging
 import warnings
 warnings.filterwarnings("ignore")
 
+@profile
 def main():
     try:
         train_pipeline = TrainingPipeline()
