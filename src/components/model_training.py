@@ -119,7 +119,8 @@ class ModelTrainer:
             return model,user_courses_number,user_id_map,user_feature_map
         except Exception as e:
             raise TrainException(e,sys)
-        
+
+    #Integrate MLFLOW to store model information
     
     def initiate_model_trainer(self) -> ModelTrainerArtifact:
         try:
